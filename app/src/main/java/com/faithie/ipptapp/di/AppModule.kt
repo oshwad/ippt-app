@@ -1,5 +1,7 @@
 package com.faithie.ipptapp.di
 
+import com.faithie.ipptapp.repository.UserRepository
+import com.faithie.ipptapp.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +14,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideExampleDependency(): String {
-        return "This is a dependency"
+    fun provideUserRepository(): UserRepository {
+        return UserRepositoryImpl()
     }
 }
