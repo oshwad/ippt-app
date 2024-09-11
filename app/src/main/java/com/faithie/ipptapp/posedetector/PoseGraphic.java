@@ -23,9 +23,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.faithie.ipptapp.posedetector.processing.GraphicOverlay;
 import com.google.mlkit.vision.common.PointF3D;
-import com.faithie.ipptapp.GraphicOverlay.Graphic;
-import com.faithie.ipptapp.GraphicOverlay;
 import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;
 
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 /** Draw the detected pose in preview. */
-public class PoseGraphic extends Graphic {
+public class PoseGraphic extends GraphicOverlay.Graphic {
 
   private static final float DOT_RADIUS = 8.0f;
   private static final float IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f;

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +15,8 @@ import com.faithie.ipptapp.ui.screens.Screen
 import com.faithie.ipptapp.ui.theme.MyAppTheme
 import com.faithie.ipptapp.utils.BottomNavBar
 import com.faithie.ipptapp.utils.PermissionHandler
+import com.faithie.ipptapp.viewmodel.ExerciseViewModel
+import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val permissionHandler = PermissionHandler(this)
@@ -22,9 +25,11 @@ class MainActivity : ComponentActivity() {
 
         permissionHandler.initPermissions()
 
+        val exerciseViewModel: ExerciseViewModel by viewModels { ExerciseViewModelFactory(application) }
+
         setContent {
             MyAppTheme {
-                MyApp()
+                MyApp(exerciseViewModel)
             }
         }
     }
@@ -32,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyApp() {
+fun MyApp(exerciseViewModel: ExerciseViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -44,6 +49,6 @@ fun MyApp() {
             }
         }
     ) {
-        NavGraph(navController = navController)
+        NavGraph(navController = navController, exerciseViewModel = exerciseViewModel)
     }
 }

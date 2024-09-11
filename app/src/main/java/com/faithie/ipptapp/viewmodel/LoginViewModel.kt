@@ -2,7 +2,7 @@ package com.faithie.ipptapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.faithie.ipptapp.model.User
+import com.faithie.ipptapp.domain.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,11 +18,13 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             // Simulate a delay to mimic network request
             kotlinx.coroutines.delay(1000)
-            _loginState.value = LoginState.Success(User(
+            _loginState.value = LoginState.Success(
+                User(
                 id = "2834703",
                 email = "example@gmail.com",
                 username =  "example"
-            ))
+            )
+            )
         }
     }
 

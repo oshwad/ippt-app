@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.model
+package com.faithie.ipptapp.domain.model
 
 data class User(
     val id: String,

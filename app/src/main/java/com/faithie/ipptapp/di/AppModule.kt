@@ -1,7 +1,7 @@
 package com.faithie.ipptapp.di
 
-import com.faithie.ipptapp.repository.UserRepository
-import com.faithie.ipptapp.repository.UserRepositoryImpl
+import com.faithie.ipptapp.domain.repository.UserRepository
+import com.faithie.ipptapp.domain.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

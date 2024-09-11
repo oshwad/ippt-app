@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.model
+package com.faithie.ipptapp.domain.model
 
 import android.graphics.Bitmap
 import com.google.mlkit.vision.common.InputImage

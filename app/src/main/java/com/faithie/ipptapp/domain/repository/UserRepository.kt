@@ -1,6 +1,6 @@
-package com.faithie.ipptapp.repository
+package com.faithie.ipptapp.domain.repository
 
-import com.faithie.ipptapp.model.User
+import com.faithie.ipptapp.domain.model.User
 
 interface UserRepository {
     suspend fun getUserById(userId: String): User?

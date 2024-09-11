@@ -3,8 +3,10 @@ package com.faithie.ipptapp.ui.screens
 import android.annotation.SuppressLint
 import androidx.camera.core.CameraSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.lifecycle.ProcessCameraProvider.getInstance
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Canvas
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -29,6 +31,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.faithie.ipptapp.posedetector.processing.GraphicOverlay
+import com.faithie.ipptapp.posedetector.processing.VisionImageProcessor
+import com.faithie.ipptapp.ui.component.CameraPreviewView
+import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
@@ -38,89 +44,23 @@ import java.util.concurrent.Executors
 @Composable
 fun ExerciseScreen(
     navController: NavHostController,
-    viewModel: ExerciseViewModel
+    viewModel: ExerciseViewModel,
 ) {
-//    Text(text = "Exercise Screen")
-    var repCount by remember { mutableIntStateOf(0) }
-    var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        CameraPreview(
-            onRepDetected = { detectedReps ->
-                repCount += detectedReps
-            },
-            executor = cameraExecutor
-        )
-
-        Box(modifier = Modifier.align(Alignment.TopCenter)) {
-            Text(text = "Reps: $repCount", modifier = Modifier.padding(16.dp))
-        }
-    }
-}
-
-@SuppressLint("RestrictedApi")
-@Composable
-fun CameraPreview(
-    onRepDetected: (Int) -> Unit,
-    executor: ExecutorService
-) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    AndroidView(
-        factory = { it ->
-            val previewView = PreviewView(it)
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(it)
-            
-            cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
-                val preview = androidx.camera.core.Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-
-                val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
-                val options = PoseDetectorOptions.Builder()
-                    .setDetectorMode(PoseDetectorOptions.STREAM_MODE)
-                    .build()
-
-                val poseDetector = PoseDetection.getClient(options)
-
-                // Camera setup and ML Kit pose detection implementation would be here
-//                val imageAnalyzer = ImageAnalysis.Builder()
-//                    .build()
-//                    .also {
-//                        it.setAnalyzer(ContextCompat.getMainExecutor(ctx), { imageProxy ->
-//                            viewModel.analyzeImage(imageProxy)
-//                        })
-//                    }
-
-                try {
-                    cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        cameraSelector,
-                        preview,
-//                        imageAnalyzer
-                    )
-                } catch (exc: Exception) {
-                    // Handle exceptions
-                }
-
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview
-                )
-
-            }, ContextCompat.getMainExecutor(it))
-
-            previewView
-        },
-        modifier = Modifier
-            .fillMaxSize()
+    CameraPreviewWithGraphicOverlay(controller = viewModel.controller.value,
+        posePositions = viewModel.poseLandmarksLiveData.value)
+    Text(
+        text = "Pose landmarks: ${
+            if (!viewModel.poseLandmarksLive.value.isNullOrEmpty())
+                viewModel.poseLandmarksLive.value[0].position3D
+            else
+                ""
+        }"
     )
 }
 
-@Preview
-@Composable
-fun ExerciseScreenPreview() {
-    ExerciseScreen(rememberNavController(), ExerciseViewModel())
-}
+//@Preview
+//@Composable
+//fun ExerciseScreenPreview() {
+//    ExerciseScreen(rememberNavController(), ExerciseViewModel())
+//}

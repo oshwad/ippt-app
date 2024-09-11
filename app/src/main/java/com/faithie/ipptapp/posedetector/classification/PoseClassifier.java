@@ -16,12 +16,8 @@
 
 package com.faithie.ipptapp.posedetector.classification;
 
-import static com.faithie.ipptapp.posedetector.classification.PoseEmbedding.getPoseEmbedding;
-import static com.faithie.ipptapp.posedetector.classification.Utils.maxAbs;
 import static com.faithie.ipptapp.posedetector.classification.Utils.multiply;
 import static com.faithie.ipptapp.posedetector.classification.Utils.multiplyAll;
-import static com.faithie.ipptapp.posedetector.classification.Utils.subtract;
-import static com.faithie.ipptapp.posedetector.classification.Utils.sumAbs;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -96,10 +92,10 @@ public class PoseClassifier {
 
     // We do flipping on X-axis so we are horizontal (mirror) invariant.
     List<PointF3D> flippedLandmarks = new ArrayList<>(landmarks);
-    multiplyAll(flippedLandmarks, PointF3D.from(-1, 1, 1));
+    Utils.multiplyAll(flippedLandmarks, PointF3D.from(-1, 1, 1));
 
-    List<PointF3D> embedding = getPoseEmbedding(landmarks);
-    List<PointF3D> flippedEmbedding = getPoseEmbedding(flippedLandmarks);
+    List<PointF3D> embedding = PoseEmbedding.getPoseEmbedding(landmarks);
+    List<PointF3D> flippedEmbedding = PoseEmbedding.getPoseEmbedding(flippedLandmarks);
 
 
     // Classification is done in two stages:
@@ -121,13 +117,13 @@ public class PoseClassifier {
         originalMax =
             max(
                 originalMax,
-                maxAbs(multiply(subtract(embedding.get(i), sampleEmbedding.get(i)), axesWeights)));
+                Utils.maxAbs(Utils.multiply(Utils.subtract(embedding.get(i), sampleEmbedding.get(i)), axesWeights)));
         flippedMax =
             max(
                 flippedMax,
-                maxAbs(
-                    multiply(
-                        subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights)));
+                Utils.maxAbs(
+                    Utils.multiply(
+                        Utils.subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights)));
       }
       // Set the max distance as min of original and flipped max distance.
       maxDistances.add(new Pair<>(poseSample, min(originalMax, flippedMax)));
@@ -148,8 +144,8 @@ public class PoseClassifier {
       float originalSum = 0;
       float flippedSum = 0;
       for (int i = 0; i < embedding.size(); i++) {
-        originalSum += sumAbs(multiply(subtract(embedding.get(i), sampleEmbedding.get(i)), axesWeights));
-        multiply(subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights);
+        originalSum += Utils.sumAbs(Utils.multiply(Utils.subtract(embedding.get(i), sampleEmbedding.get(i)), axesWeights));
+        Utils.multiply(Utils.subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights);
       }
       // Set the mean distance as min of original and flipped mean distances.
       float meanDistance = min(originalSum, flippedSum) / (embedding.size() * 2);

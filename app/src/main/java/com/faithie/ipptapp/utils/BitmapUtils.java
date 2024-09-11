@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp;
+package com.faithie.ipptapp.utils;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
@@ -35,6 +35,8 @@ import androidx.annotation.RequiresApi;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageProxy;
 import androidx.exifinterface.media.ExifInterface;
+
+import com.faithie.ipptapp.posedetector.processing.FrameMetadata;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

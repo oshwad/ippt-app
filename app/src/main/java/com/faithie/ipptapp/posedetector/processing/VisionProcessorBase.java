@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp;
+package com.faithie.ipptapp.posedetector.processing;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -35,7 +35,8 @@ import androidx.annotation.RequiresApi;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageProxy;
 
-import com.faithie.ipptapp.preference.PreferenceUtils;
+import com.faithie.ipptapp.utils.BitmapUtils;
+import com.faithie.ipptapp.utils.PreferenceUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.gms.tasks.Tasks;
@@ -65,7 +66,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
   private final ActivityManager activityManager;
   private final Timer fpsTimer = new Timer();
   private final ScopedExecutor executor;
-  private final TemperatureMonitor temperatureMonitor;
 
   // Whether this processor is already shut down
   private boolean isShutdown;
@@ -109,7 +109,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
         },
         /* delay= */ 0,
         /* period= */ 1000);
-    temperatureMonitor = new TemperatureMonitor(context);
   }
 
   // -----------------Code for processing single still image----------------------------------------
@@ -321,7 +320,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
                 activityManager.getMemoryInfo(mi);
                 long availableMegs = mi.availMem / 0x100000L;
                 Log.d(TAG, "Memory available in system: " + availableMegs + " MB");
-                temperatureMonitor.logTemperature();
               }
 
               graphicOverlay.clear();
@@ -362,7 +360,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
     isShutdown = true;
     resetLatencyStats();
     fpsTimer.cancel();
-    temperatureMonitor.stop();
   }
 
   private void resetLatencyStats() {

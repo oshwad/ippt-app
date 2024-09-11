@@ -1,6 +1,6 @@
-package com.faithie.ipptapp.repository
+package com.faithie.ipptapp.domain.repository
 
-import com.faithie.ipptapp.model.User
+import com.faithie.ipptapp.domain.model.User
 import kotlinx.coroutines.delay
 
 class UserRepositoryImpl : UserRepository {

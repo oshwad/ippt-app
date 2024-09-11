@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp;
+package com.faithie.ipptapp.posedetector.processing;
 
 /** Describing a frame info. */
 public class FrameMetadata {

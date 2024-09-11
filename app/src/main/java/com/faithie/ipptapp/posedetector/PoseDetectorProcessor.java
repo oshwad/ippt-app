@@ -21,17 +21,16 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.faithie.ipptapp.posedetector.processing.GraphicOverlay;
+import com.faithie.ipptapp.posedetector.processing.VisionProcessorBase;
+import com.faithie.ipptapp.posedetector.classification.PoseClassifierProcessor;
 import com.google.android.gms.tasks.Task;
 import com.google.android.odml.image.MlImage;
 import com.google.mlkit.vision.common.InputImage;
-import com.faithie.ipptapp.VisionProcessorBase;
-import com.faithie.ipptapp.posedetector.classification.PoseClassifierProcessor;
-import com.faithie.ipptapp.GraphicOverlay;
 import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseDetection;
 import com.google.mlkit.vision.pose.PoseDetector;
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;

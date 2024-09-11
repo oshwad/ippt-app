@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp;
+package com.faithie.ipptapp.posedetector.processing;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -211,11 +211,8 @@ public class GraphicOverlay extends View {
     }
   }
 
-  public GraphicOverlay(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    addOnLayoutChangeListener(
-        (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-            needUpdateTransformation = true);
+  public GraphicOverlay(Context context) {
+    super(context);
   }
 
   /** Removes all graphics from the overlay. */

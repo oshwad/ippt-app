@@ -1,50 +1,47 @@
 package com.faithie.ipptapp.viewmodel
 
-import android.graphics.Bitmap
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.faithie.ipptapp.model.PoseDetectionModel
-import com.google.mlkit.vision.pose.Pose
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import android.app.Application
+import androidx.camera.core.CameraSelector
+import androidx.camera.view.CameraController
+import androidx.camera.view.LifecycleCameraController
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
+import com.faithie.ipptapp.posedetector.PoseDetectionAnalyser
+import com.google.mlkit.vision.pose.PoseLandmark
+import java.util.concurrent.Executors
 
-class ExerciseViewModel : ViewModel() {
+class ExerciseViewModel(private val application: Application) : AndroidViewModel(application = application) {
 
-    private val poseDetectionModel = PoseDetectionModel()
-    var repCount = 0
-        private set
+    var executor = mutableStateOf(Executors.newSingleThreadExecutor())
+    var analyser = mutableStateOf<PoseDetectionAnalyser>(
+        PoseDetectionAnalyser(
+        onDetectPose = { poseLandmarks ->
+            // Update the LiveData with the detected pose landmarks
+            poseLandmarksLive.value = poseLandmarks
+            _poseLandmarks.value = poseLandmarks
+        },
+        getApplication(),
+    )
+    )
 
-    private var previousPose: Pose? = null
+    var poseLandmarksLive = mutableStateOf<List<PoseLandmark>>(emptyList())
 
-    fun analyzeImage(imageProxy: ImageProxy) {
-        val bitmap = imageProxy.toBitmap() ?: return
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                poseDetectionModel.detectPose(bitmap, { pose ->
-                    if (isPushUpPose(pose)) {
-                        if (previousPose == null || !isPushUpPose(previousPose!!)) {
-                            repCount++
-                        }
-                    }
-                    previousPose = pose
-                    imageProxy.close()
-                }, { exception ->
-                    imageProxy.close()
-                })
-            }
-        }
-    }
 
-    private fun isPushUpPose(pose: Pose): Boolean {
-        // Implement logic to detect if the pose corresponds to a push-up
-        return true
-    }
+    var controller = mutableStateOf(LifecycleCameraController(getApplication()).apply {
+        setEnabledUseCases( // Enable the intended use cases to be used (picture, video, analysis)
+//            CameraController.IMAGE_CAPTURE or
+//            CameraController.VIDEO_CAPTURE or
+            CameraController.IMAGE_ANALYSIS
+        )
+        setImageAnalysisAnalyzer(
+            executor.value,
+            analyser.value
+        )
+        cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+    })
 
-    override fun onCleared() {
-        super.onCleared()
-        poseDetectionModel.stopPoseDetection()
-    }
+    private var _poseLandmarks = mutableStateOf<List<PoseLandmark>>(emptyList())
+    val poseLandmarksLiveData: State<List<PoseLandmark>> get() = _poseLandmarks
+
 }

@@ -1,6 +1,6 @@
 package com.faithie.ipptapp.viewmodel
 
-import com.faithie.ipptapp.model.User
+import com.faithie.ipptapp.domain.model.User
 
 sealed class LoginState {
     object Idle : LoginState()
