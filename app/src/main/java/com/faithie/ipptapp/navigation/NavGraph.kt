@@ -7,30 +7,36 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.faithie.ipptapp.ui.screens.*
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
-import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
+import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController, exerciseViewModel: ExerciseViewModel) {
+fun NavGraph(
+    navController: NavHostController,
+    exerciseViewModel: ExerciseViewModel,
+    poseTrainingViewModel: PoseTrainingViewModel) {
 
-    Log.d("NavGraph", "Navigating to start destination: ${Screen.Login.route}")
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
-        composable(Screen.Login.route) {
+    Log.d("NavGraph", "Navigating to start destination: ${Screens.Login.route}")
+    NavHost(navController = navController, startDestination = Screens.Login.route) {
+        composable(Screens.Login.route) {
             Log.d("NavGraph", "Showing Login Screen")
             LoginScreen(navController) }
-        composable(Screen.SignUp.route) {
+        composable(Screens.SignUp.route) {
             Log.d("NavGraph", "Showing SignUp Screen")
             SignUpScreen(navController) }
-        composable(Screen.Home.route) {
+        composable(Screens.Home.route) {
             Log.d("NavGraph", "Showing Home Screen")
             HomeScreen(navController) }
-        composable(Screen.Exercise.route) {
+        composable(Screens.Exercise.route) {
             Log.d("NavGraph", "Showing Exercise Screen")
             ExerciseScreen(navController, exerciseViewModel) }
-        composable(Screen.Records.route) {
+        composable(Screens.Records.route) {
             Log.d("NavGraph", "Showing Records Screen")
             RecordsScreen(navController) }
-        composable(Screen.Account.route) {
+        composable(Screens.Account.route) {
             Log.d("NavGraph", "Showing Account Screen")
             AccountScreen(navController) }
+        composable(Screens.PoseTraining.route) {
+            PoseTrainingScreen(navController, poseTrainingViewModel)
+        }
     }
 }

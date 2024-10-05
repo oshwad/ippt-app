@@ -110,8 +110,8 @@ public class PoseGraphic extends GraphicOverlay.Graphic {
     }
 
     PoseLandmark nose = pose.getPoseLandmark(PoseLandmark.NOSE);
-    PoseLandmark lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER);
-    PoseLandmark lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
+    PoseLandmark leftEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER);
+    PoseLandmark leftEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
     PoseLandmark leftEyeOuter = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER);
     PoseLandmark rightEyeInner = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_INNER);
     PoseLandmark rightEye = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
@@ -146,9 +146,9 @@ public class PoseGraphic extends GraphicOverlay.Graphic {
     PoseLandmark rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX);
 
     // Face
-    drawLine(canvas, nose, lefyEyeInner, whitePaint);
-    drawLine(canvas, lefyEyeInner, lefyEye, whitePaint);
-    drawLine(canvas, lefyEye, leftEyeOuter, whitePaint);
+    drawLine(canvas, nose, leftEyeInner, whitePaint);
+    drawLine(canvas, leftEyeInner, leftEye, whitePaint);
+    drawLine(canvas, leftEye, leftEyeOuter, whitePaint);
     drawLine(canvas, leftEyeOuter, leftEar, whitePaint);
     drawLine(canvas, nose, rightEyeInner, whitePaint);
     drawLine(canvas, rightEyeInner, rightEye, whitePaint);

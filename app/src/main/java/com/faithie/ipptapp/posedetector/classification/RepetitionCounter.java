@@ -16,28 +16,35 @@
 
 package com.faithie.ipptapp.posedetector.classification;
 
+import android.util.Log;
+
+import com.google.mlkit.vision.pose.Pose;
+import com.google.mlkit.vision.pose.PoseLandmark;
+
 /**
  * Counts reps for the give class.
  */
 public class RepetitionCounter {
+  private static final String TAG = "RepetitionCounter";
   // These thresholds can be tuned in conjunction with the Top K values in {@link PoseClassifier}.
   // The default Top K value is 10 so the range here is [0-10].
   private static final float DEFAULT_ENTER_THRESHOLD = 6f;
   private static final float DEFAULT_EXIT_THRESHOLD = 4f;
 
-  private final String className;
+//  private final String className;
+  private final ExerciseType exerciseType;
   private final float enterThreshold;
   private final float exitThreshold;
 
   private int numRepeats;
   private boolean poseEntered;
 
-  public RepetitionCounter(String className) {
-    this(className, DEFAULT_ENTER_THRESHOLD, DEFAULT_EXIT_THRESHOLD);
+  public RepetitionCounter(ExerciseType exerciseType) {
+    this(exerciseType, DEFAULT_ENTER_THRESHOLD, DEFAULT_EXIT_THRESHOLD);
   }
 
-  public RepetitionCounter(String className, float enterThreshold, float exitThreshold) {
-    this.className = className;
+  public RepetitionCounter(ExerciseType exerciseType, float enterThreshold, float exitThreshold) {
+    this.exerciseType = exerciseType;
     this.enterThreshold = enterThreshold;
     this.exitThreshold = exitThreshold;
     numRepeats = 0;
@@ -50,8 +57,8 @@ public class RepetitionCounter {
    * @param classificationResult {link ClassificationResult} of class to confidence values.
    * @return number of reps.
    */
-  public int addClassificationResult(ClassificationResult classificationResult) {
-    float poseConfidence = classificationResult.getClassConfidence(className);
+  public int addClassificationResult(ClassificationResult classificationResult, Pose pose) {
+    float poseConfidence = classificationResult.getClassConfidence(exerciseType.name());
 
     if (!poseEntered) {
       poseEntered = poseConfidence > enterThreshold;
@@ -59,15 +66,19 @@ public class RepetitionCounter {
     }
 
     if (poseConfidence < exitThreshold) {
-      numRepeats++;
+      if (exerciseType.isPoseValid(pose)) {
+        numRepeats++;
+      } else {
+        Log.d(TAG, "Incorrect posture detected. No count");
+      }
       poseEntered = false;
     }
 
     return numRepeats;
   }
 
-  public String getClassName() {
-    return className;
+  public ExerciseType getExerciseType() {
+    return exerciseType;
   }
 
   public int getNumRepeats() {

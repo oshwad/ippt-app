@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,20 +39,32 @@ fun HomeScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Hello, {name}",
             style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(25.dp))
+        Button(onClick = {
+            navController.navigate(Screens.PoseTraining.route)
+        }) {
+            Text(text = "Train Poses")
+        }
+
         StartExerciseCard(
             onClick = {
-                navController.navigate(Screen.Exercise.route)
+                navController.navigate(Screens.Exercise.route)
             }
         )
+
         Text(text = "Last Exercise Statistics",
             style = MaterialTheme.typography.headlineSmall)
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(25.dp),
             border = BorderStroke(2.dp, Color.Black)
         ){
-            Box(modifier = Modifier.height(200.dp).fillMaxSize(), contentAlignment = Alignment.Center){
+            Box(modifier = Modifier
+                .height(200.dp)
+                .fillMaxSize(), contentAlignment = Alignment.Center){
                 Text(text = "to do", style = MaterialTheme.typography.bodyMedium)
             }
         }

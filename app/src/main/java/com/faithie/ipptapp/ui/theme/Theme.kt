@@ -34,15 +34,19 @@ val CustomTypography = Typography(
         fontFamily = Helvetica,
         fontSize = 16.sp
     ),
-    labelMedium = TextStyle(
+    bodySmall = TextStyle(
         fontFamily = Helvetica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontSize = 12.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Helvetica,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = Helvetica,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
     ),
 )
 

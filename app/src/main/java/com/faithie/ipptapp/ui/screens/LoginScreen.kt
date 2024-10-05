@@ -53,11 +53,11 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-        Button(onClick = { navController.navigate(Screen.Home.route) }) {
+        Button(onClick = { navController.navigate(Screens.Home.route) }) {
             Text(text = "Done", style = MaterialTheme.typography.labelMedium)
         }
         Spacer(modifier = Modifier.height(8.dp))
-        SignUpText(onSignUpClick = { navController.navigate(Screen.SignUp.route)})
+        SignUpText(onSignUpClick = { navController.navigate(Screens.SignUp.route)})
     }
 }
 

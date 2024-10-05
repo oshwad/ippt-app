@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.faithie.ipptapp.ui.screens.Screen
+import com.faithie.ipptapp.ui.screens.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -64,19 +64,19 @@ fun BottomNavBar(navController: NavController){
 val bottomNavItems = listOf(
     BottomNavItem(
         title = "Home",
-        route = Screen.Home.route,
+        route = Screens.Home.route,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home
     ),
     BottomNavItem(
         title = "Records",
-        route = Screen.Records.route,
+        route = Screens.Records.route,
         selectedIcon = Icons.Filled.InsertChart,
         unselectedIcon = Icons.Outlined.InsertChart
     ),
     BottomNavItem(
         title = "Account",
-        route = Screen.Account.route,
+        route = Screens.Account.route,
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle
     ),

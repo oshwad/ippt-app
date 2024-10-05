@@ -11,12 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.faithie.ipptapp.navigation.NavGraph
-import com.faithie.ipptapp.ui.screens.Screen
+import com.faithie.ipptapp.ui.screens.Screens
 import com.faithie.ipptapp.ui.theme.MyAppTheme
 import com.faithie.ipptapp.utils.BottomNavBar
 import com.faithie.ipptapp.utils.PermissionHandler
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
+import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
+import com.faithie.ipptapp.viewmodel.PoseTrainingViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val permissionHandler = PermissionHandler(this)
@@ -26,10 +28,14 @@ class MainActivity : ComponentActivity() {
         permissionHandler.initPermissions()
 
         val exerciseViewModel: ExerciseViewModel by viewModels { ExerciseViewModelFactory(application) }
+        val poseTrainingViewModel: PoseTrainingViewModel by viewModels { PoseTrainingViewModelFactory(application) }
 
         setContent {
             MyAppTheme {
-                MyApp(exerciseViewModel)
+                MyApp(
+                    exerciseViewModel,
+                    poseTrainingViewModel
+                )
             }
         }
     }
@@ -37,18 +43,25 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyApp(exerciseViewModel: ExerciseViewModel) {
+fun MyApp(
+    exerciseViewModel: ExerciseViewModel,
+    poseTrainingViewModel: PoseTrainingViewModel
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
-            if (currentRoute in listOf(Screen.Home.route, Screen.Records.route, Screen.Account.route)) {
+            if (currentRoute in listOf(Screens.Home.route, Screens.Records.route, Screens.Account.route)) {
                 BottomNavBar(navController = navController)
             }
         }
     ) {
-        NavGraph(navController = navController, exerciseViewModel = exerciseViewModel)
+        NavGraph(
+            navController = navController,
+            exerciseViewModel = exerciseViewModel,
+            poseTrainingViewModel = poseTrainingViewModel
+        )
     }
 }
