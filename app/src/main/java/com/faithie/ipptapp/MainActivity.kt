@@ -1,10 +1,12 @@
 package com.faithie.ipptapp
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,10 +23,13 @@ import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModelFactory
+import com.faithie.ipptapp.viewmodel.RecordsViewModel
+import com.faithie.ipptapp.viewmodel.RecordsViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val permissionHandler = PermissionHandler(this)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,23 +42,27 @@ class MainActivity : ComponentActivity() {
 
         val exerciseViewModel: ExerciseViewModel by viewModels { ExerciseViewModelFactory(application) }
         val poseTrainingViewModel: PoseTrainingViewModel by viewModels { PoseTrainingViewModelFactory(application) }
+        val recordsViewModel: RecordsViewModel by viewModels { RecordsViewModelFactory(application) }
 
         setContent {
             MyAppTheme {
                 MyApp(
                     exerciseViewModel,
-                    poseTrainingViewModel
+                    poseTrainingViewModel,
+                    recordsViewModel,
                 )
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyApp(
     exerciseViewModel: ExerciseViewModel,
-    poseTrainingViewModel: PoseTrainingViewModel
+    poseTrainingViewModel: PoseTrainingViewModel,
+    recordsViewModel: RecordsViewModel,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -69,7 +78,8 @@ fun MyApp(
         NavGraph(
             navController = navController,
             exerciseViewModel = exerciseViewModel,
-            poseTrainingViewModel = poseTrainingViewModel
+            poseTrainingViewModel = poseTrainingViewModel,
+            recordsViewModel = recordsViewModel
         )
     }
 }

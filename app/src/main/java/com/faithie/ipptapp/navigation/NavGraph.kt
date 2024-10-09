@@ -1,6 +1,8 @@
 package com.faithie.ipptapp.navigation
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,12 +10,16 @@ import androidx.navigation.compose.composable
 import com.faithie.ipptapp.ui.screens.*
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
+import com.faithie.ipptapp.viewmodel.RecordsViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navController: NavHostController,
     exerciseViewModel: ExerciseViewModel,
-    poseTrainingViewModel: PoseTrainingViewModel) {
+    poseTrainingViewModel: PoseTrainingViewModel,
+    recordsViewModel: RecordsViewModel
+) {
 
     Log.d("NavGraph", "Navigating to start destination: ${Screens.Home.route}")
     NavHost(navController = navController, startDestination = Screens.Home.route) {
@@ -31,7 +37,7 @@ fun NavGraph(
             ExerciseScreen(navController, exerciseViewModel) }
         composable(Screens.Records.route) {
             Log.d("NavGraph", "Showing Records Screen")
-            RecordsScreen(navController) }
+            RecordsScreen(navController, recordsViewModel) }
         composable(Screens.Account.route) {
             Log.d("NavGraph", "Showing Account Screen")
             AccountScreen(navController) }
