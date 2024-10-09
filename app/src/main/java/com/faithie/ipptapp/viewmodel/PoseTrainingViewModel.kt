@@ -6,7 +6,8 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.faithie.ipptapp.posedetector.classification.ExerciseType
+import com.faithie.ipptapp.posedetector.repcounting.ExerciseType
+import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
@@ -34,12 +35,12 @@ class PoseTrainingViewModel(application: Application) : AndroidViewModel(applica
     private val poseDetector = PoseDetection.getClient(poseDetectorOptions)
 
     // Holds the currently selected exercise type
-    private val _selectedExerciseType = MutableStateFlow(ExerciseType.PUSHUP)
+    private val _selectedExerciseType = MutableStateFlow(PushUpExercise())
     val selectedExerciseType: StateFlow<ExerciseType> = _selectedExerciseType
 
     // Function to update the selected exercise type
     fun setExerciseType(exerciseType: ExerciseType) {
-        _selectedExerciseType.value = exerciseType
+        _selectedExerciseType.value = exerciseType as PushUpExercise
     }
 
     init {
@@ -48,7 +49,7 @@ class PoseTrainingViewModel(application: Application) : AndroidViewModel(applica
             Log.d(TAG, "init: poses obtained from postList $poseList")
             for (pose in poseList) {
                 Log.d(TAG, "iterating over poseList")
-                savePoseToCSV(context, pose, _selectedExerciseType)
+//                savePoseToCSV(context, pose, _selectedExerciseType)
             }
         }
     }

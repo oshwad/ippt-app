@@ -121,6 +121,14 @@ dependencies {
 
     // preconditions and ints
     implementation("com.google.guava:guava:27.1-android")
+
+    // room dependencies
+    var room_version = "2.5.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version") // For Java projects
+    kapt("androidx.room:room-compiler:$room_version") // For Kotlin projects
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
 }
 
 // Allow references to generated code

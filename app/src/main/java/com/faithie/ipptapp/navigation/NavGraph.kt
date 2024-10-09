@@ -15,8 +15,8 @@ fun NavGraph(
     exerciseViewModel: ExerciseViewModel,
     poseTrainingViewModel: PoseTrainingViewModel) {
 
-    Log.d("NavGraph", "Navigating to start destination: ${Screens.Login.route}")
-    NavHost(navController = navController, startDestination = Screens.Login.route) {
+    Log.d("NavGraph", "Navigating to start destination: ${Screens.Home.route}")
+    NavHost(navController = navController, startDestination = Screens.Home.route) {
         composable(Screens.Login.route) {
             Log.d("NavGraph", "Showing Login Screen")
             LoginScreen(navController) }
@@ -37,6 +37,9 @@ fun NavGraph(
             AccountScreen(navController) }
         composable(Screens.PoseTraining.route) {
             PoseTrainingScreen(navController, poseTrainingViewModel)
+        }
+        composable(Screens.ExerciseResults.route) {
+            ExerciseResultsScreen(navController, exerciseViewModel)
         }
     }
 }

@@ -24,6 +24,9 @@ import android.util.Log;
 
 import androidx.annotation.WorkerThread;
 
+import com.faithie.ipptapp.posedetector.repcounting.ExerciseType;
+import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise;
+import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise;
 import com.google.common.base.Preconditions;
 import com.google.mlkit.vision.pose.Pose;
 
@@ -31,7 +34,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,36 +42,25 @@ import java.util.List;
  */
 public class PoseClassifierProcessor {
   private static final String TAG = "PoseClassifierProcessor";
-  private static final String POSE_SAMPLES_FILE = "fitness_pose_samples.csv";
-  private RepetitionCounter pushupRepCounter;
-  private RepetitionCounter situpRepCounter;
-  private ExerciseType currentExercise;
-
-  // Specify classes for which we want rep counting.
-  // These are the labels in the given {@code POSE_SAMPLES_FILE}. You can set your own class labels
-  // for your pose samples.
-  private static final String PUSHUPS_CLASS = "pushups_down";
-  private static final String SITUPS_CLASS = "situps_up";
-
+  private static final String POSE_SAMPLES_FILE = "poses.csv";
   private final boolean isStreamMode;
-
   private EMASmoothing emaSmoothing;
   private PoseClassifier poseClassifier;
+  public PushUpExercise pushUpExercise;
+  public SitUpExercise sitUpExercise;
 
   @WorkerThread
-  public PoseClassifierProcessor(Context context, boolean isStreamMode, ExerciseType exerciseType) {
+  public PoseClassifierProcessor(Context context, boolean isStreamMode) {
     Log.d(TAG, "PoseClassifierProcessor constructor");
     Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper());
-    Log.d(TAG, "Preconditions checked");
-    this.currentExercise = exerciseType;
     this.isStreamMode = isStreamMode;
     if (isStreamMode) {
       emaSmoothing = new EMASmoothing();
     }
+    pushUpExercise = new PushUpExercise();
+    sitUpExercise = new SitUpExercise();
     loadPoseSamples(context);
     Log.d(TAG, "Pose samples loaded");
-    pushupRepCounter = new RepetitionCounter(ExerciseType.PUSHUP);
-    situpRepCounter = new RepetitionCounter(ExerciseType.SITUP);
   }
 
   private void loadPoseSamples(Context context) {
@@ -77,8 +68,9 @@ public class PoseClassifierProcessor {
     try {
 //      BufferedReader reader = new BufferedReader(
 //          new InputStreamReader(context.getAssets().open(POSE_SAMPLES_FILE)));
-      File csvFile = new File(context.getExternalFilesDir(null), "poses.csv");
+      File csvFile = new File(context.getExternalFilesDir(null), POSE_SAMPLES_FILE);
       BufferedReader reader = new BufferedReader(new FileReader(csvFile));
+      Log.d(TAG, "poses.csv file loaded");
       String csvLine = reader.readLine();
       while (csvLine != null) {
         // If line is not a valid {@link PoseSample}, we'll get null and skip adding to the list.
@@ -94,57 +86,19 @@ public class PoseClassifierProcessor {
     poseClassifier = new PoseClassifier(poseSamples);
   }
 
-  /**
-   * Given a new {@link Pose} input, returns a list of formatted {@link String}s with Pose
-   * classification results.
-   *
-   * <p>Currently it returns up to 2 strings as following:
-   * 0: PoseClass : X reps
-   * 1: PoseClass : [0.0-1.0] confidence
-   */
   @WorkerThread
-  public int getPoseResult(Pose pose) {
-//    Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper());
-    ClassificationResult classification = poseClassifier.classify(pose);
+  public String getClassifiedPose(Pose pose, ExerciseType exerciseType) {
+//    Log.d(TAG, "classifying pose");
+    ClassificationResult classification = poseClassifier.classify(pose, exerciseType);
 
-    RepetitionCounter currentRepCounter = (currentExercise == ExerciseType.PUSHUP)
-            ? pushupRepCounter : situpRepCounter;
-
-    // Update {@link RepetitionCounter}s if {@code isStreamMode}.
     if (isStreamMode) {
       // Feed pose to smoothing even if no pose found.
       classification = emaSmoothing.getSmoothedResult(classification);
 
-      // Return early without updating repCounter if no pose found.
-      if (pose.getAllPoseLandmarks().isEmpty()) {
-        return currentRepCounter.getNumRepeats();
-      }
-
-      int repsBefore = currentRepCounter.getNumRepeats();
-      int repsAfter = currentRepCounter.addClassificationResult(classification, pose);
-
-      if (repsAfter > repsBefore) {
-        // Play a fun beep when rep counter updates.
-        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-        tg.startTone(ToneGenerator.TONE_PROP_BEEP);
-      }
-
-      return repsAfter; // Return the current number of reps
+      return classification.getMaxConfidenceClass();
     }
 
-    // Add maxConfidence class of current frame to result if pose is found.
-//    if (!pose.getAllPoseLandmarks().isEmpty()) {
-//      String maxConfidenceClass = classification.getMaxConfidenceClass();
-//      String maxConfidenceClassResult = String.format(
-//          Locale.US,
-//          "%s : %.2f confidence",
-//          maxConfidenceClass,
-//          classification.getClassConfidence(maxConfidenceClass)
-//              / poseClassifier.confidenceRange());
-//      result.add(maxConfidenceClassResult);
-//    }
-
-    return 0; // Default case, if it's not stream mode or other conditions
+    return "unknown at " + TAG; // Default case, if it's not stream mode or other conditions
   }
 
 

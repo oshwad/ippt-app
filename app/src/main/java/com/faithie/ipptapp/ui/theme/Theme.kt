@@ -22,6 +22,10 @@ val Helvetica = FontFamily(
     Font(R.font.helvetica)
 )
 val CustomTypography = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = HelveticaNeueExtBold,
+        fontSize = 36.sp
+    ),
     headlineMedium = TextStyle(
         fontFamily = HelveticaNeueExtBold,
         fontSize = 30.sp
@@ -29,6 +33,10 @@ val CustomTypography = Typography(
     headlineSmall = TextStyle(
         fontFamily = HelveticaNeueExtBold,
         fontSize = 24.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = Helvetica,
+        fontSize = 20.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Helvetica,
@@ -47,6 +55,11 @@ val CustomTypography = Typography(
         fontFamily = Helvetica,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = Helvetica,
+        fontWeight = FontWeight.Bold,
+        fontSize = 12.sp
     ),
 )
 

@@ -44,6 +44,11 @@ public class ClassificationResult {
   }
 
   public String getMaxConfidenceClass() {
+    if (classConfidences.isEmpty()) {
+      // Return a default class name or handle the case where no confidence is available
+      return "unknown";
+    }
+
     return max(
         classConfidences.entrySet(),
         (entry1, entry2) -> (int) (entry1.getValue() - entry2.getValue()))

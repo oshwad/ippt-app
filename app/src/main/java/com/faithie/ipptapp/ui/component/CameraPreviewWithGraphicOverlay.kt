@@ -1,11 +1,12 @@
 package com.faithie.ipptapp.ui.component
 
-import android.util.Log
+import androidx.camera.core.ImageProxy
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,47 +32,23 @@ fun CameraPreviewWithGraphicOverlay(
 ) {
     var viewWidth by remember { mutableIntStateOf(0) }
     var viewHeight by remember { mutableIntStateOf(0) }
+    var viewFlipped by remember { mutableStateOf(true) }
+    var flipX = -1
 
     Box(modifier = modifier
-        .fillMaxSize()
-        .onSizeChanged { size ->
-            viewWidth = size.width
-            viewHeight = size.height
-        },
-        contentAlignment = Alignment.Center) {
-        CameraPreview(controller, Modifier.fillMaxSize())
+        .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CameraPreview(
+            controller,
+            Modifier.fillMaxSize(),
+            onSizeChanged = { width, height, isFlipped ->
+                viewWidth = width
+                viewHeight = height
+                viewFlipped = isFlipped
+            }
+        )
 
-//        Canvas(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .align(Alignment.Center)
-//        ) {
-//            // Inside the Canvas, draw the camera preview overlay and boxes based on pose positions
-//            drawIntoCanvas { canvas ->
-//                if (posePositions.isNotEmpty()){
-//                    var nose = posePositions[0].position3D
-//
-//                    val positionX = nose.x + 250f // X-coordinate of the landmark
-//                    val positionY = nose.y // Y-coordinate of the landmark
-//                    val boxSize = 50f // Size of the box (Box around eadch landmark
-//                    val left = positionX - boxSize / 2
-//                    val top = positionY - boxSize / 2
-//                    val right = positionX + boxSize / 2
-//                    val bottom = positionY + boxSize / 2
-//
-//                    val paint = Paint().apply {
-//                        color = Color.Red
-//                        style = PaintingStyle.Stroke
-//                        strokeCap = StrokeCap.Round
-//                        strokeWidth = 2f
-//                    }
-//
-//                    canvas.drawRect(left, top, right, bottom, paint)
-//                }else{
-//                    Log.d("CameraPreviewWithGraphicOverlay", "Pose positions is empty")
-//                }
-//            }
-//        }
         // Custom overlay for drawing the pose
         Canvas(modifier = Modifier.fillMaxSize().align(Alignment.Center)) {
             // Paints for left and right body parts
@@ -93,7 +70,13 @@ fun CameraPreviewWithGraphicOverlay(
 
             // Loop through the landmarks to draw points
             posePositions.forEach { landmark ->
-                val point = Offset(landmark.position.x + 400, landmark.position.y)
+                if (viewFlipped) {
+                    flipX = -1
+                }
+                else {
+                    flipX = 1
+                }
+                val point = Offset(landmark.position.x * flipX + 700, landmark.position.y + 500)
                 drawCircle(
                     color = Color.White,
                     radius = 8f,
@@ -102,21 +85,21 @@ fun CameraPreviewWithGraphicOverlay(
             }
 
             // example: draw a line between left shoulder and left elbow
-            val leftShoulder = posePositions.find { it.landmarkType == PoseLandmark.LEFT_SHOULDER }
-            val leftElbow = posePositions.find { it.landmarkType == PoseLandmark.LEFT_ELBOW }
-
-            if (leftShoulder != null && leftElbow != null) {
-                val startPoint = Offset(leftShoulder.position.x, leftShoulder.position.y)
-                val endPoint = Offset(leftElbow.position.x, leftElbow.position.y)
-
-                // Draw the line between the shoulder and elbow
-                drawLine(
-                    color = Color.Green,
-                    start = startPoint,
-                    end = endPoint,
-                    strokeWidth = 10f
-                )
-            }
+//            val leftShoulder = posePositions.find { it.landmarkType == PoseLandmark.LEFT_SHOULDER }
+//            val leftElbow = posePositions.find { it.landmarkType == PoseLandmark.LEFT_ELBOW }
+//
+//            if (leftShoulder != null && leftElbow != null) {
+//                val startPoint = Offset(leftShoulder.position.x, leftShoulder.position.y)
+//                val endPoint = Offset(leftElbow.position.x, leftElbow.position.y)
+//
+//                // Draw the line between the shoulder and elbow
+//                drawLine(
+//                    color = Color.Green,
+//                    start = startPoint,
+//                    end = endPoint,
+//                    strokeWidth = 10f
+//                )
+//            }
         }
 
     }

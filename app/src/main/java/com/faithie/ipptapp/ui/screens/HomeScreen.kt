@@ -41,11 +41,6 @@ fun HomeScreen(navController: NavHostController) {
             style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(25.dp))
-        Button(onClick = {
-            navController.navigate(Screens.PoseTraining.route)
-        }) {
-            Text(text = "Train Poses")
-        }
 
         StartExerciseCard(
             onClick = {
@@ -100,7 +95,7 @@ fun StartExerciseCard(onClick: () -> Unit) {
                     .background(Color.Black.copy(alpha = 0.3f)) // Black color with 30% opacity
             )
             Text(
-                text = "Start exercise",
+                text = "Start Training",
                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
             )
         }

@@ -21,8 +21,10 @@ import static com.faithie.ipptapp.posedetector.classification.Utils.multiplyAll;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import android.util.Log;
 import android.util.Pair;
 
+import com.faithie.ipptapp.posedetector.repcounting.ExerciseType;
 import com.google.mlkit.vision.common.PointF3D;
 import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;
@@ -79,11 +81,11 @@ public class PoseClassifier {
     return min(maxDistanceTopK, meanDistanceTopK);
   }
 
-  public ClassificationResult classify(Pose pose) {
-    return classify(extractPoseLandmarks(pose));
+  public ClassificationResult classify(Pose pose, ExerciseType exerciseType) {
+    return classify(extractPoseLandmarks(pose), exerciseType);
   }
 
-  public ClassificationResult classify(List<PointF3D> landmarks) {
+  public ClassificationResult classify(List<PointF3D> landmarks, ExerciseType exerciseType) {
     ClassificationResult result = new ClassificationResult();
     // Return early if no landmarks detected.
     if (landmarks.isEmpty()) {
@@ -109,6 +111,13 @@ public class PoseClassifier {
         maxDistanceTopK, (o1, o2) -> -Float.compare(o1.second, o2.second));
     // Retrieve top K poseSamples by least distance to remove outliers.
     for (PoseSample poseSample : poseSamples) {
+      // **Filter samples by exercise type**
+      // Check if the PoseSample's class name contains the current exercise type
+      if (!poseSample.getClassName().toLowerCase()
+              .contains(exerciseType.getExerciseName().toLowerCase())) {
+        continue; // Skip samples that don't match the exercise type
+      }
+
       List<PointF3D> sampleEmbedding = poseSample.getEmbedding();
 
       float originalMax = 0;
@@ -156,10 +165,15 @@ public class PoseClassifier {
       }
     }
 
+    String classifications = "";
+
     for (Pair<PoseSample, Float> sampleDistances : meanDistances) {
       String className = sampleDistances.first.getClassName();
       result.incrementClassConfidence(className);
+
+      classifications += className + ", ";
     }
+//    Log.d(TAG, "mean distances: " + classifications);
 
     return result;
   }

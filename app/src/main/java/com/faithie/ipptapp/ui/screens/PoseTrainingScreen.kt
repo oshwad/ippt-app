@@ -22,7 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.faithie.ipptapp.posedetector.classification.ExerciseType
+import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 
 @Composable
@@ -45,7 +46,7 @@ fun PoseTrainingScreen(
     // Track the selected exercise type from the ViewModel
     val selectedExerciseType by viewModel.selectedExerciseType.collectAsState()
 
-    val exerciseOptions = listOf(ExerciseType.PUSHUP, ExerciseType.SITUP)
+    val exerciseOptions = listOf(PushUpExercise(), SitUpExercise())
 
     Column (
         modifier = Modifier
@@ -70,7 +71,7 @@ fun PoseTrainingScreen(
                 ) {
                     exerciseOptions.forEach { exercise ->
                         DropdownMenuItem(
-                            text = { Text(text = exercise.name) },
+                            text = { Text(text = exercise.getExerciseName()) },
                             onClick = {
                                 viewModel.setExerciseType(exercise) // Update the ViewModel
                                 expanded = false
