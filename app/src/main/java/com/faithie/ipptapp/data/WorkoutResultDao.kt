@@ -7,7 +7,7 @@ import androidx.room.Query
 @Dao
 interface WorkoutResultDao {
     @Insert
-    suspend fun insertResult(exerciseResult: WorkoutResult)
+    suspend fun insertResult(workoutResult: WorkoutResult)
 
     @Query("SELECT * FROM workout_results ORDER BY date DESC")
     suspend fun getAllResults(): List<WorkoutResult>
