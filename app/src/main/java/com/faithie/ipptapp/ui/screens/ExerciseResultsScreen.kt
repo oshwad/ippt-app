@@ -50,7 +50,7 @@ fun ExerciseResultsScreen(
             style = MaterialTheme.typography.labelLarge
         )
         Text(
-            text = "Sit Up No-Count Reps: ${viewModel.getNumRepsPushUp()}",
+            text = "Sit Up No-Count Reps: ${viewModel.getNumRepsSitUp()}",
             style = MaterialTheme.typography.bodySmall
         )
     }

@@ -17,11 +17,11 @@ class RecordsViewModel(application: Application) :
     val allResults = MutableLiveData<List<WorkoutResult>>()
 
     init {
-        fetchResults()
+        fetchWorkoutResults()
     }
 
     // Function to fetch the data and update the MutableLiveData
-    private fun fetchResults() {
+    private fun fetchWorkoutResults() {
         viewModelScope.launch(Dispatchers.IO) {
             val results = workoutResultDao.getAllResults()
             allResults.postValue(results)
