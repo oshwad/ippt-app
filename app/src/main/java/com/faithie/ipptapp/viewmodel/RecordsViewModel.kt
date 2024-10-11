@@ -1,6 +1,7 @@
 package com.faithie.ipptapp.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class RecordsViewModel(application: Application) :
     AndroidViewModel(application = application) {
+    private val TAG = "RecordsViewModel"
     private val workoutResultDao = WorkoutDatabase.getDatabase(application).workoutResultDao()
 
     // MutableLiveData to store the results once fetched
@@ -21,7 +23,7 @@ class RecordsViewModel(application: Application) :
     }
 
     // Function to fetch the data and update the MutableLiveData
-    private fun fetchWorkoutResults() {
+    fun fetchWorkoutResults() {
         viewModelScope.launch(Dispatchers.IO) {
             val results = workoutResultDao.getAllResults()
             allResults.postValue(results)

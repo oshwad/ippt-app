@@ -1,52 +1,130 @@
 package com.faithie.ipptapp.ui.screens
 
+import android.app.Application
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import co.yml.charts.axis.AxisData
+import co.yml.charts.common.components.Legends
+import co.yml.charts.common.extensions.formatToSinglePrecision
+import co.yml.charts.common.model.LegendLabel
+import co.yml.charts.common.model.LegendsConfig
+import co.yml.charts.common.model.Point
+import co.yml.charts.ui.combinedchart.CombinedChart
+import co.yml.charts.ui.combinedchart.model.CombinedChartData
+import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun RecordsScreen(
     navController: NavHostController,
     viewModel: RecordsViewModel
 ) {
+    val TAG = "RecordsScreen"
     val workoutData = viewModel.allResults.observeAsState(initial = emptyList())
 
-    // Continue with the same chart setup logic
+    LaunchedEffect(Unit) {
+        viewModel.fetchWorkoutResults() // Triggers fetching whenever the screen is visible
+    }
+
     val sortedData = workoutData.value.reversed()
+    val pushUpReps = sortedData.map { it.pushUpReps.toFloat() }
+    val sitUpReps = sortedData.map { it.sitUpReps.toFloat() }
+    val formatter = DateTimeFormatter.ofPattern("dd MMM")
+    val dates = sortedData.map { it.date.format(formatter) }
 
-//    val entriesPushups = sortedData.mapIndexed { index, result ->
-//        Entry(index.toFloat(), result.pushUpReps.toFloat())
-//    }
-//    val entriesSitups = sortedData.mapIndexed { index, result ->
-//        Entry(index.toFloat(), result.sitUpReps.toFloat())
-//    }
-//
-//    val pushupDataSet = LineDataSet(entriesPushups, "Push-ups")
-//    val situpDataSet = LineDataSet(entriesSitups, "Sit-ups")
-//
-//    pushupDataSet.color = Color.RED
-//    situpDataSet.color = Color.BLUE
-//
-//    val lineData = LineData(pushupDataSet, situpDataSet)
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp)
-//    ) {
-//        LineChart(lineData)
-//        Spacer(modifier = Modifier.height(16.dp))
-//    }
+    val pushUpPoints: List<Point> = pushUpReps.mapIndexed { index, reps -> Point(index.toFloat(), reps) }
+    val sitUpPoints: List<Point> = sitUpReps.mapIndexed { index, reps -> Point(index.toFloat(), reps) }
+
+    val xAxisData = AxisData.Builder()
+        .axisStepSize(100.dp)
+        .steps(pushUpPoints.size - 1)
+        .labelData { i -> dates[i] }
+        .labelAndAxisLinePadding(15.dp)
+        .build()
+
+    val maxReps = maxOf(pushUpReps.maxOrNull() ?: 0f, sitUpReps.maxOrNull() ?: 0f) // Get max value
+    val steps: Int = 1
+    val yAxisData = AxisData.Builder()
+        .steps(steps)
+        .labelAndAxisLinePadding(20.dp)
+        .labelData { i ->
+            val yScale = maxReps / steps.toFloat()
+            (i * yScale).formatToSinglePrecision()
+        }.build()
+
+    val lineChartData = LineChartData(
+        linePlotData = LinePlotData(
+            lines = listOf(
+                Line(
+                    dataPoints = pushUpPoints,
+                    LineStyle(color = Color.Blue),
+                    IntersectionPoint(),
+                    SelectionHighlightPoint(),
+                    ShadowUnderLine(),
+                    SelectionHighlightPopUp(
+                        popUpLabel = { xValue, yValue ->
+                            "Push Ups: ${yValue.toInt()}"
+                        }
+                    )
+                ),
+                Line( // For Sit Ups
+                    dataPoints = sitUpPoints,
+                    LineStyle(color = Color.Green), // Different color for Sit Ups
+                    IntersectionPoint(),
+                    SelectionHighlightPoint(),
+                    ShadowUnderLine(),
+                    SelectionHighlightPopUp(
+                        popUpLabel = { xValue, yValue ->
+                            "Sit Ups: ${yValue.toInt()}"
+                        }
+                    )
+                )
+            ),
+        ),
+        xAxisData = xAxisData,
+        yAxisData = yAxisData,
+        gridLines = GridLines(),
+        backgroundColor = Color.White
+    )
+    Column (modifier = Modifier.padding(16.dp)) {
+        LineChart(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+            lineChartData = lineChartData
+        )
+        val pushUpLegend: LegendLabel = LegendLabel(Color.Blue, "Push Ups")
+        val sitUpLegend: LegendLabel = LegendLabel(Color.Green, "Sit Ups")
+        val legendLabel = listOf(pushUpLegend, sitUpLegend)
+        Legends(legendsConfig = LegendsConfig(
+            legendLabelList = legendLabel
+        ))
+    }
+
 }
-
-//@Preview
-//@Composable
-//fun RecordsScreenPreview() {
-//    val navController = rememberNavController()
-//    RecordsScreen(navController, RecordsViewModel())
-//}
