@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
     implementation("com.google.mlkit:pose-detection-accurate:17.0.0")
+    implementation("androidx.compose.material3:material3-android:1.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -130,7 +131,7 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
-//    implementation("io.github.dautovicharis:charts:1.3.1")
+    // chart drawing
     implementation("co.yml:ycharts:2.1.0")
 }
 

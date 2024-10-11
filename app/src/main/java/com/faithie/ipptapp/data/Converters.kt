@@ -3,7 +3,9 @@ package com.faithie.ipptapp.data
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -21,6 +23,20 @@ class Converters {
     fun toLocalDateTime(epochMillis: Long?): LocalDateTime? {
         return epochMillis?.let {
             LocalDateTime.ofEpochSecond(it / 1000, 0, ZoneOffset.UTC)
+        }
+    }
+
+    // Convert LocalDate to Long (milliseconds)
+    @TypeConverter
+    fun fromLocalDate(localDate: LocalDate?): Long? {
+        return localDate?.atStartOfDay(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
+    }
+
+    // Convert Long (milliseconds) to LocalDate
+    @TypeConverter
+    fun toLocalDate(millis: Long?): LocalDate? {
+        return millis?.let {
+            LocalDate.ofEpochDay(it / (1000 * 60 * 60 * 24))
         }
     }
 }

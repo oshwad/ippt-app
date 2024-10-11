@@ -10,9 +10,13 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.faithie.ipptapp.data.User
 import com.faithie.ipptapp.navigation.NavGraph
 import com.faithie.ipptapp.posedetector.training.PoseAssetReader
 import com.faithie.ipptapp.ui.screens.Screens
@@ -25,6 +29,8 @@ import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModelFactory
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
 import com.faithie.ipptapp.viewmodel.RecordsViewModelFactory
+import com.faithie.ipptapp.viewmodel.UserViewModel
+import com.faithie.ipptapp.viewmodel.UserViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val permissionHandler = PermissionHandler(this)
@@ -43,6 +49,7 @@ class MainActivity : ComponentActivity() {
         val exerciseViewModel: ExerciseViewModel by viewModels { ExerciseViewModelFactory(application) }
         val poseTrainingViewModel: PoseTrainingViewModel by viewModels { PoseTrainingViewModelFactory(application) }
         val recordsViewModel: RecordsViewModel by viewModels { RecordsViewModelFactory(application) }
+        val userViewModel: UserViewModel by viewModels { UserViewModelFactory(application) }
 
         setContent {
             MyAppTheme {
@@ -50,6 +57,7 @@ class MainActivity : ComponentActivity() {
                     exerciseViewModel,
                     poseTrainingViewModel,
                     recordsViewModel,
+                    userViewModel,
                 )
             }
         }
@@ -63,6 +71,7 @@ fun MyApp(
     exerciseViewModel: ExerciseViewModel,
     poseTrainingViewModel: PoseTrainingViewModel,
     recordsViewModel: RecordsViewModel,
+    userViewModel: UserViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -79,7 +88,8 @@ fun MyApp(
             navController = navController,
             exerciseViewModel = exerciseViewModel,
             poseTrainingViewModel = poseTrainingViewModel,
-            recordsViewModel = recordsViewModel
+            recordsViewModel = recordsViewModel,
+            userViewModel = userViewModel
         )
     }
 }

@@ -49,7 +49,7 @@ val CustomTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = Helvetica,
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp
+        fontSize = 18.sp
     ),
     labelMedium = TextStyle(
         fontFamily = Helvetica,

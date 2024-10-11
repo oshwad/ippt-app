@@ -28,9 +28,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.faithie.ipptapp.R
 import com.faithie.ipptapp.ui.theme.MyAppTheme
+import com.faithie.ipptapp.viewmodel.UserViewModel
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(
+    navController: NavHostController,
+    viewModel: UserViewModel
+) {
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,13 +103,5 @@ fun StartExerciseCard(onClick: () -> Unit) {
                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    MyAppTheme {
-        HomeScreen(rememberNavController())
     }
 }
