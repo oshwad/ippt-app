@@ -4,9 +4,16 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +44,7 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import com.faithie.ipptapp.ui.component.Legend
 import com.faithie.ipptapp.ui.component.WorkoutResultsTable
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
 import java.time.format.DateTimeFormatter
@@ -113,21 +121,46 @@ fun RecordsScreen(
         gridLines = GridLines(),
         backgroundColor = Color.White
     )
-    Column (modifier = Modifier.padding(16.dp)) {
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            lineChartData = lineChartData
-        )
-        val pushUpLegend: LegendLabel = LegendLabel(Color.Blue, "Push Ups")
-        val sitUpLegend: LegendLabel = LegendLabel(Color.Magenta, "Sit Ups")
-        val legendLabel = listOf(pushUpLegend, sitUpLegend)
-        Legends(
-            legendsConfig = LegendsConfig(
-                legendLabelList = legendLabel
+
+    LazyColumn(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            Text(text = "Workout History", style = MaterialTheme.typography.headlineMedium)
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                lineChartData = lineChartData
             )
-        )
-        WorkoutResultsTable(workoutResults = workoutData.value)
+        }
+        item {
+            val pushUpLegend: LegendLabel = LegendLabel(Color.Blue, "Push Ups")
+            val sitUpLegend: LegendLabel = LegendLabel(Color.Magenta, "Sit Ups")
+            val legendLabel = listOf(pushUpLegend, sitUpLegend)
+//            Legends(
+//                legendsConfig = LegendsConfig(
+//                    legendLabelList = legendLabel
+//                )
+//            )
+            Row {
+                Legend(Color.Blue, "Push Ups")
+                Legend(Color.Magenta, "Sit Ups")
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            WorkoutResultsTable(workoutResults = workoutData.value)
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +47,7 @@ fun CountdownTimer(
         Text(
             text = if (countdown > 0) countdown.toString() else "GO!",
             fontSize = 100.sp,
-            color = if (countdown > 0) Color.Red else Color.Green,
+            color = if (countdown > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.align(Alignment.Center) // Center the text inside the box
         )
     }
