@@ -1,5 +1,6 @@
 package com.faithie.ipptapp.ui.component
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -18,8 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.layout.onSizeChanged
-import co.yml.charts.common.extensions.isNotNull
+import androidx.compose.ui.platform.LocalConfiguration
 import com.google.mlkit.vision.pose.PoseLandmark
 
 @Composable
@@ -29,13 +28,16 @@ fun PoseGraphicOverlay(
     modifier: Modifier = Modifier
 ) {
     val TAG = "PoseGraphicOverlay"
-    val OFFSET_X = 600
-    val OFFSET_Y = 500
     val STROKE_WIDTH = 10f
     val DOT_RADIUS = 7f
 
     var isFrontCamera by remember { mutableStateOf(true) }
     var flipX = -1
+
+    val configuration = LocalConfiguration.current
+    var isLandscape by remember { mutableStateOf(false) }
+    var offsetX = 600
+    var offsetY = 500
 
     val leftColor = Color.Green
     val rightColor = Color.Yellow
@@ -43,12 +45,22 @@ fun PoseGraphicOverlay(
 
     fun drawLineWithCheck(drawScope: DrawScope, startPoseLandmark: PoseLandmark?, endPoseLandmark: PoseLandmark?, color: Color) {
         if (startPoseLandmark != null && endPoseLandmark != null) {
-            val startPoint = startPoseLandmark.position.let { Offset(it.x * flipX + OFFSET_X, it.y + OFFSET_Y) }
-            val endPoint = endPoseLandmark.position.let { Offset(it.x * flipX + OFFSET_X, it.y + OFFSET_Y) }
+            val startPoint = startPoseLandmark.position.let { Offset(it.x * flipX + offsetX, it.y + offsetY) }
+            val endPoint = endPoseLandmark.position.let { Offset(it.x * flipX + offsetX, it.y + offsetY) }
 
             drawScope.drawLine(color, startPoint, endPoint, STROKE_WIDTH)
         }
     }
+
+    isLandscape = when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> true
+        Configuration.ORIENTATION_PORTRAIT -> false
+        else -> true
+    }
+    offsetX = if (isLandscape) 900 else 600
+    offsetY = if (isLandscape) 100 else 500
+//    Log.d(TAG, "is landscape: $isLandscape")
+//    Log.d(TAG, "offsetX: $offsetX, offsetY: $offsetY")
 
     LaunchedEffect(controller.cameraSelector) {
         isFrontCamera = when (controller.cameraSelector) {
@@ -56,10 +68,10 @@ fun PoseGraphicOverlay(
             CameraSelector.DEFAULT_BACK_CAMERA -> false
             else -> true
         }
-
         flipX = if (isFrontCamera) -1 else 1
 
         Log.d(TAG, "is front camera: $isFrontCamera")
+        Log.d(TAG, "flipX == $flipX")
     }
 
     Box(modifier = modifier
@@ -68,7 +80,7 @@ fun PoseGraphicOverlay(
     ) {
         Canvas(modifier = Modifier.fillMaxSize().align(Alignment.Center)) {
             posePositions.forEach { landmark ->
-                val point = Offset(landmark.position.x * flipX + OFFSET_X, landmark.position.y + OFFSET_Y)
+                val point = Offset(landmark.position.x * flipX + offsetX, landmark.position.y + offsetY)
 
                 drawCircle(
                     color = Color.White,

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.faithie.ipptapp.ui.component.CameraPreview
@@ -43,6 +44,9 @@ fun ExerciseScreen(
     var isStartPressed by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
     LaunchedEffect(Unit) {
         viewModel.resetExerciseViewModel()
     }
@@ -65,6 +69,8 @@ fun ExerciseScreen(
     )
 //    CameraPreview(controller = viewModel.controller.value, onCameraChanges = { x, y -> })
 //    PoseGraphicOverlay(controller = viewModel.controller.value, posePositions = viewModel.poseLandmarks.value)
+
+
 
     if (isStartPressed) {
         CountdownTimer(
@@ -136,18 +142,4 @@ fun ExerciseScreen(
             }
         )
     }
-//    Text(
-//        text = "Pose landmarks: ${
-//            if (!viewModel.poseLandmarks.value.isNullOrEmpty())
-//                viewModel.poseLandmarks.value[0].position3D
-//            else
-//                ""
-//        }"
-//    )
 }
-
-//@Preview
-//@Composable
-//fun ExerciseScreenPreview() {
-//    ExerciseScreen(rememberNavController(), ExerciseViewModel())
-//}
