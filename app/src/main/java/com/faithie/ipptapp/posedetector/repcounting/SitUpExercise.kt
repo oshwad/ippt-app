@@ -57,13 +57,18 @@ class SitUpExercise : ExerciseType() {
         val leftBodyAngle = calculateAngle(leftShoulder, leftHip, leftHeel)
         val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightHeel)
 
-        if (!(leftBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
-                && rightBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE)) {
-            Log.d(TAG, "situp_down pose validation failed")
+        if (((leftBodyAngle >= MIN_STRAIGHT_ANGLE)
+                    && (rightBodyAngle >= MIN_STRAIGHT_ANGLE))) {
+            Log.d(TAG, "situp_down pose validation success. left body angle: $leftBodyAngle, right body angle: $rightBodyAngle")
         }
 
-        return (leftBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
-                && rightBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE)
+        if (!((leftBodyAngle >= MIN_STRAIGHT_ANGLE)
+                    && (rightBodyAngle >= MIN_STRAIGHT_ANGLE))) {
+            Log.d(TAG, "situp_dwon pose validation failed. left body angle: $leftBodyAngle, right body angle: $rightBodyAngle")
+        }
+
+        return (((leftBodyAngle >= MIN_STRAIGHT_ANGLE)
+                && (rightBodyAngle >= MIN_STRAIGHT_ANGLE)))
     }
 
     private fun validateSitUpUp(pose: Pose): Boolean {
@@ -83,14 +88,17 @@ class SitUpExercise : ExerciseType() {
         val leftBodyAngle = calculateAngle(leftShoulder, leftHip, leftHeel)
         val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightHeel)
 
-        if (!(leftBodyAngle in MIN_90DEG_ANGLE..MAX_90DEG_ANGLE
-                    && rightBodyAngle in MIN_90DEG_ANGLE..MAX_90DEG_ANGLE)) {
-            Log.d(TAG, "situp_up pose validation failed")
-            Log.d(TAG, "situp_up: left body angle: $leftBodyAngle")
-            Log.d(TAG, "situp_up: right body angle: $rightBodyAngle")
+        if (((leftBodyAngle >= MIN_90DEG_ANGLE)
+                    && (rightBodyAngle >= MIN_90DEG_ANGLE))) {
+            Log.d(TAG, "situp_up pose validation success. left body angle: $leftBodyAngle, right body angle: $rightBodyAngle")
         }
 
-        return (leftBodyAngle in MIN_90DEG_ANGLE..MAX_90DEG_ANGLE
-                && rightBodyAngle in MIN_90DEG_ANGLE..MAX_90DEG_ANGLE)
+        if (!((leftBodyAngle >= MIN_90DEG_ANGLE)
+                    && (rightBodyAngle >= MIN_90DEG_ANGLE))) {
+            Log.d(TAG, "situp_up pose validation failed. left body angle: $leftBodyAngle, right body angle: $rightBodyAngle")
+        }
+
+        return (((leftBodyAngle >= MIN_90DEG_ANGLE)
+                && (rightBodyAngle >= MIN_90DEG_ANGLE)))
     }
 }

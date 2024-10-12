@@ -11,10 +11,10 @@ abstract class ExerciseType {
     open var numReps: Int = 0
     companion object {
         const val MIN_STRAIGHT_ANGLE = 160.0
-        const val MAX_STRAIGHT_ANGLE = 190.0
+        const val MAX_STRAIGHT_ANGLE = 180.0
 
         const val MIN_90DEG_ANGLE = 60.0
-        const val MAX_90DEG_ANGLE = 140.0
+        const val MAX_90DEG_ANGLE = 110.0
     }
     abstract fun validateSequence(currentPose: Pose, currentClassification: String): Int
     protected open fun calculateAngle(
