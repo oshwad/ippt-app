@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +54,7 @@ fun DatePickerDocked(
         }.timeInMillis
     }
 
-    val datePickerState = rememberDatePickerState(
+    val datePickerState: DatePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= todayMillis // Only allow dates from today onwards
@@ -67,6 +69,10 @@ fun DatePickerDocked(
 //    } ?: ""
 
     var selectedDate by remember { mutableStateOf<String?>(initialValue) }
+
+//    LaunchedEffect(showDatePicker) {
+//        selectedDate = datePickerState.selectedDateMillis?.let { convertMillisToDateString(it) }
+//    }
 
     Box(
         modifier = Modifier
