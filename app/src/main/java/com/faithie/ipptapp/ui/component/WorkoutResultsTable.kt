@@ -3,9 +3,6 @@ package com.faithie.ipptapp.ui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -77,7 +74,7 @@ fun WorkoutResultsTable(
                 modifier = Modifier
                     .border(BorderStroke(1.dp, Color.Black))
                     .fillMaxWidth()
-                    .height(30.dp)
+                    .height(40.dp)
             ) {
                 Text(
                     text = result.date.format(dateTimeFormatter),

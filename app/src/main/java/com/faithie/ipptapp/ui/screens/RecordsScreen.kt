@@ -37,6 +37,7 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import com.faithie.ipptapp.ui.component.WorkoutResultsTable
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
 import java.time.format.DateTimeFormatter
 
@@ -122,9 +123,11 @@ fun RecordsScreen(
         val pushUpLegend: LegendLabel = LegendLabel(Color.Blue, "Push Ups")
         val sitUpLegend: LegendLabel = LegendLabel(Color.Green, "Sit Ups")
         val legendLabel = listOf(pushUpLegend, sitUpLegend)
-        Legends(legendsConfig = LegendsConfig(
-            legendLabelList = legendLabel
-        ))
+        Legends(
+            legendsConfig = LegendsConfig(
+                legendLabelList = legendLabel
+            )
+        )
+        WorkoutResultsTable(workoutResults = workoutData.value)
     }
-
 }
