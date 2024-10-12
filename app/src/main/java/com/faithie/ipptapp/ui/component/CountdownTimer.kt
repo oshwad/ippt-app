@@ -35,6 +35,7 @@ fun CountdownTimer(
             countdown--
         } else {
             tg.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP)
+            delay(1000L)
             onCountdownFinished() // Notify when countdown is finished
         }
     }

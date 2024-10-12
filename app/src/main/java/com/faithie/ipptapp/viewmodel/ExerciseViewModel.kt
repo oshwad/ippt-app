@@ -48,8 +48,10 @@ class ExerciseViewModel(application: Application) :
     private val _isExerciseInProgress = mutableStateOf(false)
     val isWorkoutCompleted: State<Boolean> get() = _isWorkoutCompleted
     private val _isWorkoutCompleted = mutableStateOf(false)
-    private val numRepsPushUp = mutableIntStateOf(0)
-    private val numRepsSitUp = mutableIntStateOf(0)
+    private val _numRepsPushUp = mutableIntStateOf(0)
+    val numRepsPushUp: State<Int> get() = _numRepsPushUp
+    private val _numRepsSitUp = mutableIntStateOf(0)
+    val numRepsSitUp: State<Int> get() = _numRepsSitUp
     private val workoutResultDao = WorkoutDatabase.getDatabase(application).workoutResultDao()
 
     private var _imageWidth = mutableStateOf(0)
@@ -76,6 +78,7 @@ class ExerciseViewModel(application: Application) :
                 updateReps(reps)
             },
             currentExercise = _currentExercise,
+            isExerciseInProgress
         )
     )
 
@@ -103,16 +106,8 @@ class ExerciseViewModel(application: Application) :
         _timer.value = WORKOUT_TIME
         _isExerciseInProgress.value = false
         _isWorkoutCompleted.value = false
-        numRepsPushUp.value = 0
-        numRepsSitUp.value = 0
-    }
-
-    fun getNumRepsPushUp(): Int {
-        return numRepsPushUp.value
-    }
-
-    fun getNumRepsSitUp(): Int {
-        return numRepsSitUp.value
+        _numRepsPushUp.value = 0
+        _numRepsSitUp.value = 0
     }
 
     private var workoutJob: Job? = null
@@ -149,16 +144,16 @@ class ExerciseViewModel(application: Application) :
         } else {
             // Current exercise is situp
             if (!_isExerciseInProgress.value) { // situp exercise complete
-                onCompleteWorkout(numRepsPushUp.value, numRepsSitUp.value)
+                onCompleteWorkout(_numRepsPushUp.value, _numRepsSitUp.value)
             }
         }
     }
 
     private fun updateReps(reps: Int) {
         if (_currentExercise.value is PushUpExercise) {
-            numRepsPushUp.value = reps // Store reps for Push-Up
+            _numRepsPushUp.value = reps // Store reps for Push-Up
         } else if (_currentExercise.value is SitUpExercise) {
-            numRepsSitUp.value = reps // Store reps for Sit-Up
+            _numRepsSitUp.value = reps // Store reps for Sit-Up
         }
     }
 

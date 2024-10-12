@@ -36,21 +36,21 @@ fun ExerciseResultsScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Push Up Reps: ${viewModel.getNumRepsPushUp()}",
+            text = "Push Up Reps: ${viewModel.numRepsPushUp}",
             style = MaterialTheme.typography.labelLarge
         )
         Text(
-            text = "Push Up No-Count Reps: ${viewModel.getNumRepsPushUp()}",
+            text = "Push Up No-Count Reps: ${viewModel.numRepsPushUp}",
             style = MaterialTheme.typography.bodySmall
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Sit Up Reps: ${viewModel.getNumRepsSitUp()}",
+            text = "Sit Up Reps: ${viewModel.numRepsSitUp}",
             style = MaterialTheme.typography.labelLarge
         )
         Text(
-            text = "Sit Up No-Count Reps: ${viewModel.getNumRepsSitUp()}",
+            text = "Sit Up No-Count Reps: ${viewModel.numRepsSitUp}",
             style = MaterialTheme.typography.bodySmall
         )
     }

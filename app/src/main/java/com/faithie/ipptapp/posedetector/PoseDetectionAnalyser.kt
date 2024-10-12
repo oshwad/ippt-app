@@ -28,6 +28,7 @@ class PoseDetectionAnalyser(
     private val onDetectPose: (List<PoseLandmark>) -> Unit,
     private val onClassifiedPose: (Int) -> Unit,
     private var currentExercise: State<ExerciseType>,
+    private val isExerciseInProgress: State<Boolean>
 ): ImageAnalysis.Analyzer {
 
     private val TAG = "PoseDetectionAnalyser"
@@ -49,7 +50,7 @@ class PoseDetectionAnalyser(
         val mediaImage: Image? = imageProxy.image
         if (mediaImage != null){
             getImageDim(imageProxy)
-            Log.d(TAG, "Image dimensions: width=${imageProxy.width}, height=${imageProxy.height}")
+//            Log.d(TAG, "Image dimensions: width=${imageProxy.width}, height=${imageProxy.height}")
             val inputImage: InputImage = InputImage.fromMediaImage(
                 mediaImage, imageProxy.imageInfo.rotationDegrees
             )
@@ -79,27 +80,29 @@ class PoseDetectionAnalyser(
 
     private fun classifyAndCountReps(result: Pose) {
 //        Log.d(TAG, "classifying and counting reps")
-        val poseClassificationRes: String? = poseClassifierProcessor.getClassifiedPose(result, currentExercise.value)
-        if (poseClassificationRes != null){
-            if(curClassification != poseClassificationRes){
-                Log.d(TAG, "classified pose is: $poseClassificationRes")
-                curClassification = poseClassificationRes
-            }
-            val numReps = when (currentExercise.value) {
-                is PushUpExercise -> poseClassifierProcessor.pushUpExercise.validateSequence(
-                    result, poseClassificationRes
-                )
-                is SitUpExercise -> poseClassifierProcessor.sitUpExercise.validateSequence(
-                    result, poseClassificationRes
-                )
-                else -> {
-                    poseClassifierProcessor.pushUpExercise.validateSequence(
+        if (isExerciseInProgress.value) {
+            val poseClassificationRes: String? = poseClassifierProcessor.getClassifiedPose(result, currentExercise.value)
+            if (poseClassificationRes != null){
+                if(curClassification != poseClassificationRes){
+                    Log.d(TAG, "classified pose is: $poseClassificationRes")
+                    curClassification = poseClassificationRes
+                }
+                val numReps = when (currentExercise.value) {
+                    is PushUpExercise -> poseClassifierProcessor.pushUpExercise.validateSequence(
                         result, poseClassificationRes
                     )
+                    is SitUpExercise -> poseClassifierProcessor.sitUpExercise.validateSequence(
+                        result, poseClassificationRes
+                    )
+                    else -> {
+                        poseClassifierProcessor.pushUpExercise.validateSequence(
+                            result, poseClassificationRes
+                        )
+                    }
                 }
-            }
 
-            onClassifiedPose(numReps)
+                onClassifiedPose(numReps)
+            }
         }
     }
 }

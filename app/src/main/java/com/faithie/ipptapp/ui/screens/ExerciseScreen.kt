@@ -4,9 +4,11 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -20,9 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
 import com.faithie.ipptapp.ui.component.CameraPreview
 import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.ui.component.CountdownTimer
@@ -46,6 +51,12 @@ fun ExerciseScreen(
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+    var numReps by remember { mutableStateOf(0) }
+    if (currentExercise.name == PushUpExercise().name)
+        numReps = viewModel.numRepsPushUp.value else {
+        numReps = viewModel.numRepsSitUp.value
+    }
 
     LaunchedEffect(Unit) {
         viewModel.resetExerciseViewModel()
@@ -83,17 +94,36 @@ fun ExerciseScreen(
 
     }
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp).fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = currentExercise.name,
-            style = MaterialTheme.typography.headlineSmall
-        )
+        Box(modifier = Modifier){
+            Column {
+                Text(
+                    text = currentExercise.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White
+                )
+                Text(
+                    text = "Time left: $timer seconds",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+            }
+        }
 
-        Text(text = "Time left: $timer seconds")
+        if (isExerciseInProgress) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = "$numReps",
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 250.sp,
+                color = Color.White
+            )
+        }
 
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Button(
                 onClick = {
