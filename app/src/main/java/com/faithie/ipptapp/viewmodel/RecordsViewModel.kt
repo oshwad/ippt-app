@@ -15,9 +15,7 @@ class RecordsViewModel(application: Application) :
     private val TAG = "RecordsViewModel"
     private val workoutResultDao = WorkoutDatabase.getDatabase(application).workoutResultDao()
 
-    // MutableLiveData to store the results once fetched
     val allResults = MutableLiveData<List<WorkoutResult>>()
-
     val mostRecentWorkout = MutableLiveData<WorkoutResult>()
 
     init {

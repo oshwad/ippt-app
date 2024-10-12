@@ -12,11 +12,16 @@ class UserViewModel(application: Application) :
 
     // Function to fetch user data
     suspend fun getUser(): User? {
-    return userDao.getUser()
-}
+        return userDao.getUser()
+    }
 
     // Function to insert user data
     suspend fun insertUser(user: User) {
+        userDao.insertUser(user)
+    }
+
+    suspend fun updateUser(user: User) {
+        userDao.deleteUser()
         userDao.insertUser(user)
     }
 }

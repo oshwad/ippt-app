@@ -23,10 +23,11 @@ import co.yml.charts.common.extensions.isNotNull
 fun IntDropdownMenu(
     textLabel: String,
     options: List<Int>,
+    initialValue: Int?,
     modifier: Modifier
 ): Int? {
     var expanded by remember { mutableStateOf(false) }
-    var selectedValue by remember { mutableStateOf<Int?>(null) }
+    var selectedValue by remember { mutableStateOf<Int?>(initialValue) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,

@@ -41,7 +41,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDocked(): LocalDate? {
+fun DatePickerDocked(
+    initialValue: String?
+): LocalDate? {
     var showDatePicker by remember { mutableStateOf(false) }
 
     val todayMillis = remember {
@@ -60,16 +62,18 @@ fun DatePickerDocked(): LocalDate? {
 
     val selectedDateMillis: Long? = datePickerState.selectedDateMillis
 
-    val selectedDate = selectedDateMillis?.let {
-        convertMillisToDateString(it)
-    } ?: ""
+//    val selectedDate = selectedDateMillis?.let {
+//        convertMillisToDateString(it)
+//    } ?: ""
+
+    var selectedDate by remember { mutableStateOf<String?>(initialValue) }
 
     Box(
         modifier = Modifier
     ) {
         TextField(
             modifier = Modifier.fillMaxWidth(),
-            value = selectedDate,
+            value = selectedDate ?: "",
             textStyle = MaterialTheme.typography.bodyMedium,
             onValueChange = { },
             label = { Text(text = "Next IPPT Date", style = MaterialTheme.typography.labelMedium) },
@@ -104,7 +108,7 @@ fun DatePickerDocked(): LocalDate? {
                         headline = {
                             Text(
                                 modifier = Modifier.padding(16.dp),
-                                text = selectedDate,
+                                text = selectedDate ?: "",
                                 style = MaterialTheme.typography.labelLarge
                             )
                         },
@@ -114,8 +118,8 @@ fun DatePickerDocked(): LocalDate? {
         }
     }
 
-    return if (selectedDate.isNotEmpty()) {
-        convertDateStringToLocalDate(selectedDate)
+    return if (selectedDate?.isNotEmpty() == true) {
+        convertDateStringToLocalDate(selectedDate!!)
     } else {
         null // Return null if no date is selected
     }

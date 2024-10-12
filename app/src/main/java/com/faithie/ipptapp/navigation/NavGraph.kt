@@ -64,7 +64,7 @@ fun NavGraph(
             PoseTrainingScreen(navController, poseTrainingViewModel)
         }
         composable(Screens.ExerciseResults.route) {
-            ExerciseResultsScreen(navController, exerciseViewModel)
+            WorkoutResultsScreen(navController, exerciseViewModel)
         }
         composable(Screens.UserDetailsFormScreen.route) {
             UserDetailsFormScreen(navController, userViewModel)

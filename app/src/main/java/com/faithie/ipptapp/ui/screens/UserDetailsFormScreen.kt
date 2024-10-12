@@ -89,8 +89,13 @@ fun UserDetailsFormScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        val ageOptions = (10..70).toList()
-        selectedAge = IntDropdownMenu(textLabel = "Age", options = ageOptions, modifier = Modifier.fillMaxWidth())
+        val ageOptions = (18..60).toList()
+        selectedAge = IntDropdownMenu(
+            textLabel = "Age",
+            options = ageOptions,
+            initialValue = null,
+            modifier = Modifier.fillMaxWidth()
+        )
         if (selectedAge == null) ageError = true else ageError = false
         if (ageError && isDoneClicked) {
             Text("Please select a valid age",
@@ -112,12 +117,22 @@ fun UserDetailsFormScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val minutesOptions = (6..20).toList()
-            selectedMinutes = IntDropdownMenu(textLabel = "Minutes", options = minutesOptions, modifier = Modifier.width(180.dp))
+            selectedMinutes = IntDropdownMenu(
+                textLabel = "Minutes",
+                options = minutesOptions,
+                initialValue = null,
+                modifier = Modifier.width(180.dp)
+            )
 
             Spacer(modifier = Modifier.width(5.dp))
 
             val secondsOptions = (0..59).toList()
-            selectedSeconds = IntDropdownMenu(textLabel = "Seconds", options = secondsOptions, modifier = Modifier.fillMaxWidth())
+            selectedSeconds = IntDropdownMenu(
+                textLabel = "Seconds",
+                options = secondsOptions,
+                initialValue = null,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         if (selectedMinutes == null || selectedSeconds == null) {
@@ -133,7 +148,7 @@ fun UserDetailsFormScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        nextIpptDate = DatePickerDocked()
+        nextIpptDate = DatePickerDocked("")
         if (nextIpptDate == null) {
             ipptDateError = true
             if (isDoneClicked) {
