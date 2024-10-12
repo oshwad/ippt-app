@@ -81,6 +81,7 @@ class PoseAssetReader(context: Context) {
         val augmentedImages =  augmentImage(bitmap)
 
         augmentedImages.forEachIndexed { index, augmentedBitmap ->
+            // rotation degrees for a bitmap is just 0 (unlike image proxy)
             val inputImage = InputImage.fromBitmap(augmentedBitmap, 0)
             val augmentedImageName = "${imageName}_aug_$index"
 

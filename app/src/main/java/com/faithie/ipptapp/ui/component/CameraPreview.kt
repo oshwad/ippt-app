@@ -1,5 +1,6 @@
 package com.faithie.ipptapp.ui.component
 
+import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
@@ -22,11 +23,12 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun CameraPreview(
+fun CameraPreview (
     controller: LifecycleCameraController,
     modifier: Modifier = Modifier,
-    onSizeChanged: (Int, Int, Boolean) -> Unit
-){
+    onCameraChanges: (Int, Int) -> Unit
+) {
+    val TAG = "CameraPreview"
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val previewView: PreviewView = remember { PreviewView(context) }
@@ -37,26 +39,26 @@ fun CameraPreview(
     // States to hold the width, height, and flipped status
     var previewWidth by remember { mutableStateOf(0) }
     var previewHeight by remember { mutableStateOf(0) }
-    var isFlipped by remember { mutableStateOf(true) }
+    var isFrontFacingCam by remember { mutableStateOf(true) }
 
     // Check if the camera is front-facing (flipped)
-    isFlipped = controller.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
+    isFrontFacingCam = controller.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
 
     fun flipCamera() {
-        controller.cameraSelector = if (isFlipped) {
+        controller.cameraSelector = if (isFrontFacingCam) {
             CameraSelector.DEFAULT_BACK_CAMERA
         } else {
             CameraSelector.DEFAULT_FRONT_CAMERA
         }
         // Update the isFlipped state based on the selected camera
-        isFlipped = controller.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
+        isFrontFacingCam = controller.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
     }
 
     Box(
         modifier = modifier.onSizeChanged { size ->
             previewWidth = size.width
             previewHeight = size.height
-            onSizeChanged(previewWidth, previewHeight, isFlipped)
+            onCameraChanges(previewWidth, previewHeight)
         }
     ) {
         AndroidView(
@@ -64,7 +66,11 @@ fun CameraPreview(
             modifier = modifier
         )
         IconButton(
-            onClick = { flipCamera() },
+            onClick = {
+                flipCamera()
+//                onCameraChanges(previewWidth, previewHeight)
+                Log.d(TAG, "is front facing cam: $isFrontFacingCam")
+            },
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
             Icon(

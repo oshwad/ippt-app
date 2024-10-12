@@ -1,6 +1,7 @@
 package com.faithie.ipptapp.ui.screens
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
@@ -21,8 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.faithie.ipptapp.ui.component.CameraPreview
 import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.ui.component.CountdownTimer
+import com.faithie.ipptapp.ui.component.PoseGraphicOverlay
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,6 +34,7 @@ fun ExerciseScreen(
     navController: NavHostController,
     viewModel: ExerciseViewModel,
 ) {
+    val TAG = "ExerciseScreen"
     val timer by viewModel.timer
     val currentExercise by viewModel.currentExercise
     val isExerciseInProgress by viewModel.isExerciseInProgress
@@ -53,10 +57,15 @@ fun ExerciseScreen(
         showExitDialog = true
     }
 
+    Log.d(TAG, "imageWidth: ${viewModel.imageWidth.value}, imageHeight: ${viewModel.imageHeight.value}")
     CameraPreviewWithGraphicOverlay(
         controller = viewModel.controller.value,
         posePositions = viewModel.poseLandmarks.value,
+        imageDims = mutableStateOf(Pair(viewModel.imageWidth.value, viewModel.imageHeight.value))
     )
+//    CameraPreview(controller = viewModel.controller.value, onCameraChanges = { x, y -> })
+//    PoseGraphicOverlay(controller = viewModel.controller.value, posePositions = viewModel.poseLandmarks.value)
+
     if (isStartPressed) {
         CountdownTimer(
             onCountdownFinished = {

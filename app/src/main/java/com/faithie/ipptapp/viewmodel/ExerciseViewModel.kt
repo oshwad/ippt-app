@@ -65,6 +65,7 @@ class ExerciseViewModel(application: Application) :
                 // Update image dimensions in the ViewModel
                 _imageWidth.value = imageProxy.width
                 _imageHeight.value = imageProxy.height
+                Log.d(TAG, "imagewidth: ${imageWidth.value} imageHeight: ${imageHeight.value}")
             },
             onDetectPose = { poseLandmarks ->
                 // Update the live data with the detected pose landmarks
@@ -75,7 +76,6 @@ class ExerciseViewModel(application: Application) :
                 updateReps(reps)
             },
             currentExercise = _currentExercise,
-            isExerciseInProgress
         )
     )
 

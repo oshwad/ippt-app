@@ -28,7 +28,6 @@ class PoseDetectionAnalyser(
     private val onDetectPose: (List<PoseLandmark>) -> Unit,
     private val onClassifiedPose: (Int) -> Unit,
     private var currentExercise: State<ExerciseType>,
-    private val isExerciseInProgress: State<Boolean>
 ): ImageAnalysis.Analyzer {
 
     private val TAG = "PoseDetectionAnalyser"
@@ -47,17 +46,10 @@ class PoseDetectionAnalyser(
 
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
-//        Log.d(TAG, "analyze function")
-        // Call the callback to pass the width and height of the ImageProxy
-        getImageDim(imageProxy)
-
-        if (!isExerciseInProgress.value) {
-            imageProxy.close() // Close the image proxy if not analyzing
-            return
-        }
-
         val mediaImage: Image? = imageProxy.image
         if (mediaImage != null){
+            getImageDim(imageProxy)
+            Log.d(TAG, "Image dimensions: width=${imageProxy.width}, height=${imageProxy.height}")
             val inputImage: InputImage = InputImage.fromMediaImage(
                 mediaImage, imageProxy.imageInfo.rotationDegrees
             )
