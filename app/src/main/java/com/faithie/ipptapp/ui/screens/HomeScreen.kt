@@ -3,6 +3,7 @@ package com.faithie.ipptapp.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.faithie.ipptapp.R
+import com.faithie.ipptapp.data.User
 import com.faithie.ipptapp.ui.theme.MyAppTheme
 import com.faithie.ipptapp.viewmodel.UserViewModel
 
@@ -35,16 +42,22 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: UserViewModel
 ) {
+    var userName by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        userName = viewModel.getUser()?.name ?: ""
+    }
+
     Column (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     )
     {
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Hello, {name}",
+        Text(text = "Hello, $userName",
             style = MaterialTheme.typography.headlineMedium)
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         StartExerciseCard(
             onClick = {
@@ -52,13 +65,15 @@ fun HomeScreen(
             }
         )
 
-        Text(text = "Last Exercise Statistics",
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "Last Exercise",
             style = MaterialTheme.typography.headlineSmall)
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(25.dp),
+                .padding(5.dp),
             border = BorderStroke(2.dp, Color.Black)
         ){
             Box(modifier = Modifier
@@ -77,7 +92,7 @@ fun StartExerciseCard(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(25.dp),
+            .padding(5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(
