@@ -10,7 +10,7 @@ abstract class ExerciseType {
     abstract val poseSequence: PoseSequence
     open var numReps: Int = 0
     companion object {
-        const val MIN_STRAIGHT_ANGLE = 160.0
+        const val MIN_STRAIGHT_ANGLE = 155.0
         const val MAX_STRAIGHT_ANGLE = 180.0
 
         const val MIN_90DEG_ANGLE = 60.0

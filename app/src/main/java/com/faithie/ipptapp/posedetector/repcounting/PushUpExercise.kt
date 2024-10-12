@@ -81,8 +81,8 @@ class PushUpExercise : ExerciseType() {
 
         return (leftBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
                 && rightBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
-                && leftArmAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
-                && rightArmAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE)
+                && (leftArmAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE
+                || rightArmAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE) )
     }
 
     private fun validatePushUpDown(pose: Pose): Boolean {
@@ -117,23 +117,23 @@ class PushUpExercise : ExerciseType() {
 //            Log.d(TAG, "pushup_down pose validation failed")
 //        }
 
-        if (((leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
+        if (( (leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
                     && (rightBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
-                    && (leftArmAngle <= MAX_90DEG_ANGLE)
-                    && (rightArmAngle <= MAX_90DEG_ANGLE))) {
+                    && ((leftArmAngle <= MAX_90DEG_ANGLE) || (rightArmAngle <= MAX_90DEG_ANGLE))
+                    )) {
             Log.d(TAG, "pushup_down pose validation success leftbodyangle: $leftBodyAngle, rightbodyangle: $rightBodyAngle, leftarmangle: $leftArmAngle, rightarmangle: $rightArmAngle")
         }
 
-        if (!((leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
+        if (!( (leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
                     && (rightBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
-                    && (leftArmAngle <= MAX_90DEG_ANGLE)
-                    && (rightArmAngle <= MAX_90DEG_ANGLE))) {
+                    && ((leftArmAngle <= MAX_90DEG_ANGLE) || (rightArmAngle <= MAX_90DEG_ANGLE))
+                    )) {
             Log.d(TAG, "pushup_down pose validation failed leftbodyangle: $leftBodyAngle, rightbodyangle: $rightBodyAngle, leftarmangle: $leftArmAngle, rightarmangle: $rightArmAngle")
         }
 
-        return (((leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
+        return (( (leftBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
                 && (rightBodyAngle in (MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE))
-                && (leftArmAngle <= MAX_90DEG_ANGLE)
-                && (rightArmAngle <= MAX_90DEG_ANGLE)))
+                && ((leftArmAngle <= MAX_90DEG_ANGLE) || (rightArmAngle <= MAX_90DEG_ANGLE))
+                ))
     }
 }
