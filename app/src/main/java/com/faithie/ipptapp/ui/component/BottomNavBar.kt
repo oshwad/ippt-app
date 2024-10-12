@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.utils
+package com.faithie.ipptapp.ui.component
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons

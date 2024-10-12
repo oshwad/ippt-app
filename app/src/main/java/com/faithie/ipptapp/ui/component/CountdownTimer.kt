@@ -46,8 +46,8 @@ fun CountdownTimer(
     ) {
         Text(
             text = if (countdown > 0) countdown.toString() else "GO!",
-            fontSize = 100.sp,
-            color = if (countdown > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary,
+            fontSize = 150.sp,
+            color = if (countdown > 0) Color(0xFFFF1744) else Color(0xFF00C853),
             modifier = Modifier.align(Alignment.Center) // Center the text inside the box
         )
     }

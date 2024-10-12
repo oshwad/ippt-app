@@ -49,7 +49,7 @@ fun WorkoutResultsTable(
                 color = Color.Black
             )
             Text(
-                text = "Push-Ups",
+                text = "Push Ups",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
                     .weight(1f)
@@ -60,7 +60,7 @@ fun WorkoutResultsTable(
                 color = Color.Black
             )
             Text(
-                text = "Sit-Ups",
+                text = "Sit Ups",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
                     .weight(1f)

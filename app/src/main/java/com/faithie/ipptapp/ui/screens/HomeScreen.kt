@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.faithie.ipptapp.R
 import com.faithie.ipptapp.data.WorkoutResult
@@ -107,7 +108,6 @@ fun StartExerciseCard(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth(),
-//            .padding(5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(
@@ -116,8 +116,8 @@ fun StartExerciseCard(onClick: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.situp),
-                contentDescription = "sit up image",
+                painter = painterResource(id = R.drawable.bald),
+                contentDescription = "bald people running",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
@@ -126,11 +126,12 @@ fun StartExerciseCard(onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)) // Black color with 30% opacity
+                    .background(Color.Black.copy(alpha = 0.4f)) // Black color with 30% opacity
             )
             Text(
                 text = "Start Training",
-                style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                style = MaterialTheme.typography.labelLarge.copy(color = Color.White),
+                fontSize = 25.sp
             )
         }
     }

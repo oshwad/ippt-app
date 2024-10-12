@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val WORKOUT_TIME = 0
+    private val WORKOUT_TIME = 60
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 

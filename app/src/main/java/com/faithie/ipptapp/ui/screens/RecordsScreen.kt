@@ -119,7 +119,7 @@ fun RecordsScreen(
         xAxisData = xAxisData,
         yAxisData = yAxisData,
         gridLines = GridLines(),
-        backgroundColor = Color.White
+        backgroundColor = Color.Transparent
     )
 
     LazyColumn(

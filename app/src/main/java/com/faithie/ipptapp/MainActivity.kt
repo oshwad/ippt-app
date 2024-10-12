@@ -21,7 +21,7 @@ import com.faithie.ipptapp.navigation.NavGraph
 import com.faithie.ipptapp.posedetector.training.PoseAssetReader
 import com.faithie.ipptapp.ui.screens.Screens
 import com.faithie.ipptapp.ui.theme.MyAppTheme
-import com.faithie.ipptapp.utils.BottomNavBar
+import com.faithie.ipptapp.ui.component.BottomNavBar
 import com.faithie.ipptapp.utils.PermissionHandler
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
