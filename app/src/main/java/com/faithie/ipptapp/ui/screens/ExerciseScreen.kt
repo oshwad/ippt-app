@@ -53,12 +53,19 @@ fun ExerciseScreen(
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     var numReps by remember { mutableStateOf(0) }
-    if (currentExercise.name == PushUpExercise().name)
-        numReps = viewModel.numRepsPushUp.value else {
+    if (currentExercise.name == PushUpExercise().name) {
+        numReps = viewModel.numRepsPushUp.value
+        Log.d(TAG, "num reps pushup view model ${viewModel.numRepsPushUp.value}")
+        Log.d(TAG, "num reps pushup observed from view model state $numReps")
+    }
+    else {
         numReps = viewModel.numRepsSitUp.value
+        Log.d(TAG, "num reps situp view model ${viewModel.numRepsSitUp.value}")
+        Log.d(TAG, "num reps situp observed from view model state $numReps")
     }
 
     LaunchedEffect(Unit) {
+        Log.d(TAG, "reset exercise view model")
         viewModel.resetExerciseViewModel()
     }
 
@@ -72,7 +79,7 @@ fun ExerciseScreen(
         showExitDialog = true
     }
 
-    Log.d(TAG, "imageWidth: ${viewModel.imageWidth.value}, imageHeight: ${viewModel.imageHeight.value}")
+//    Log.d(TAG, "imageWidth: ${viewModel.imageWidth.value}, imageHeight: ${viewModel.imageHeight.value}")
     CameraPreviewWithGraphicOverlay(
         controller = viewModel.controller.value,
         posePositions = viewModel.poseLandmarks.value,
@@ -94,7 +101,9 @@ fun ExerciseScreen(
 
     }
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxSize(),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Box(modifier = Modifier){

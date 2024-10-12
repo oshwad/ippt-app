@@ -1,5 +1,6 @@
 package com.faithie.ipptapp.ui.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +26,24 @@ fun WorkoutResultsScreen(
     navController: NavHostController,
     viewModel: ExerciseViewModel
 ) {
+    val TAG = "WorkoutResultsScreen"
     val context = LocalContext.current
 
     BackHandler {
         viewModel.resetExerciseViewModel()
-        navController.navigate(Screens.Home.route)
+        Log.d(TAG, "reset exercise view model")
+        navController.popBackStack(Screens.Home.route, inclusive = false)
     }
 
     LaunchedEffect(Unit) {
         Toast.makeText(context, "Workout saved successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.resetExerciseViewModel()
+            Log.d(TAG, "ViewModel reset in onDispose ${viewModel.numRepsPushUp}, ${viewModel.numRepsSitUp}")
+        }
     }
 
     Column (

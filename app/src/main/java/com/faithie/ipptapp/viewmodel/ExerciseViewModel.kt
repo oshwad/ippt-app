@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val WORKOUT_TIME = 60
+    private val WORKOUT_TIME = 10
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 
@@ -67,14 +67,14 @@ class ExerciseViewModel(application: Application) :
                 // Update image dimensions in the ViewModel
                 _imageWidth.value = imageProxy.width
                 _imageHeight.value = imageProxy.height
-                Log.d(TAG, "imagewidth: ${imageWidth.value} imageHeight: ${imageHeight.value}")
+//                Log.d(TAG, "imagewidth: ${imageWidth.value} imageHeight: ${imageHeight.value}")
             },
             onDetectPose = { poseLandmarks ->
                 // Update the live data with the detected pose landmarks
                 _poseLandmarks.value = poseLandmarks
             },
             onClassifiedPose = { reps ->
-                Log.d(TAG, "numReps: $reps")
+//                Log.d(TAG, "numReps: $reps")
                 updateReps(reps)
             },
             currentExercise = _currentExercise,
@@ -101,6 +101,7 @@ class ExerciseViewModel(application: Application) :
     }
 
     fun resetExerciseViewModel() {
+        analyser.value.resetReps()
         _poseLandmarks.value = emptyList()
         _currentExercise.value = PushUpExercise()
         _timer.value = WORKOUT_TIME
@@ -108,6 +109,7 @@ class ExerciseViewModel(application: Application) :
         _isWorkoutCompleted.value = false
         _numRepsPushUp.value = 0
         _numRepsSitUp.value = 0
+        Log.d(TAG, "resetting exercise view model")
     }
 
     private var workoutJob: Job? = null
@@ -169,7 +171,7 @@ class ExerciseViewModel(application: Application) :
 
         CoroutineScope(Dispatchers.IO).launch {
             workoutResultDao.insertResult(result)
-            Log.d(TAG, "Workout database: " + workoutResultDao.getAllResults())
+//            Log.d(TAG, "Workout database: " + workoutResultDao.getAllResults())
         }
     }
 }

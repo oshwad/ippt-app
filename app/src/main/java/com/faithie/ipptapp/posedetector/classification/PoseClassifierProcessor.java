@@ -101,5 +101,8 @@ public class PoseClassifierProcessor {
     return "unknown at " + TAG; // Default case, if it's not stream mode or other conditions
   }
 
-
+  public void resetReps() {
+    pushUpExercise.resetReps();
+    sitUpExercise.resetReps();
+  }
 }

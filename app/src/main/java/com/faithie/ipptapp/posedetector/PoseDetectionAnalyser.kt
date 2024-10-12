@@ -105,4 +105,10 @@ class PoseDetectionAnalyser(
             }
         }
     }
+
+    fun resetReps() {
+        if (::poseClassifierProcessor.isInitialized) {
+            poseClassifierProcessor.resetReps()
+        }
+    }
 }
