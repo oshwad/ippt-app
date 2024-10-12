@@ -18,6 +18,8 @@ class RecordsViewModel(application: Application) :
     // MutableLiveData to store the results once fetched
     val allResults = MutableLiveData<List<WorkoutResult>>()
 
+    val mostRecentWorkout = MutableLiveData<WorkoutResult>()
+
     init {
         fetchWorkoutResults()
     }
@@ -27,6 +29,8 @@ class RecordsViewModel(application: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             val results = workoutResultDao.getAllResults()
             allResults.postValue(results)
+
+            mostRecentWorkout.postValue(workoutResultDao.getMostRecentResult())
         }
     }
 }

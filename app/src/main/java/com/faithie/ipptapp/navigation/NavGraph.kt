@@ -50,7 +50,7 @@ fun NavGraph(
             SignUpScreen(navController) }
         composable(Screens.Home.route) {
             Log.d("NavGraph", "Showing Home Screen")
-            HomeScreen(navController, userViewModel) }
+            HomeScreen(navController, userViewModel, recordsViewModel) }
         composable(Screens.Exercise.route) {
             Log.d("NavGraph", "Showing Exercise Screen")
             ExerciseScreen(navController, exerciseViewModel) }

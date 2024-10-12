@@ -11,4 +11,7 @@ interface WorkoutResultDao {
 
     @Query("SELECT * FROM workout_results ORDER BY date DESC")
     suspend fun getAllResults(): List<WorkoutResult>
+
+    @Query("SELECT * FROM workout_results ORDER BY date DESC LIMIT 1")
+    suspend fun getMostRecentResult(): WorkoutResult?
 }

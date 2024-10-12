@@ -96,7 +96,7 @@ fun RecordsScreen(
                 ),
                 Line( // For Sit Ups
                     dataPoints = sitUpPoints,
-                    LineStyle(color = Color.Green), // Different color for Sit Ups
+                    LineStyle(color = Color.Magenta), // Different color for Sit Ups
                     IntersectionPoint(),
                     SelectionHighlightPoint(),
                     ShadowUnderLine(),
@@ -121,7 +121,7 @@ fun RecordsScreen(
             lineChartData = lineChartData
         )
         val pushUpLegend: LegendLabel = LegendLabel(Color.Blue, "Push Ups")
-        val sitUpLegend: LegendLabel = LegendLabel(Color.Green, "Sit Ups")
+        val sitUpLegend: LegendLabel = LegendLabel(Color.Magenta, "Sit Ups")
         val legendLabel = listOf(pushUpLegend, sitUpLegend)
         Legends(
             legendsConfig = LegendsConfig(
