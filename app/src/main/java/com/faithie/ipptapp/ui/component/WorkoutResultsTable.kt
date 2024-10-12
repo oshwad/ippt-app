@@ -27,7 +27,7 @@ fun WorkoutResultsTable(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
 //            .padding(16.dp)
     ) {
         // Table Header

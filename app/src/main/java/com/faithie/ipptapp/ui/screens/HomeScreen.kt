@@ -32,9 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.faithie.ipptapp.R
 import com.faithie.ipptapp.data.WorkoutResult
+import com.faithie.ipptapp.ui.component.DayCountdown
 import com.faithie.ipptapp.ui.component.WorkoutResultsTable
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
 import com.faithie.ipptapp.viewmodel.UserViewModel
+import java.time.LocalDate
 
 @Composable
 fun HomeScreen(
@@ -50,7 +52,7 @@ fun HomeScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(25.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     )
@@ -67,10 +69,11 @@ fun HomeScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         Text(text = "Last Exercise",
-            style = MaterialTheme.typography.headlineSmall)
+            style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(16.dp))
 
         val mostRecentWorkout = recordsViewModel.mostRecentWorkout
         if (mostRecentWorkout != null) {
@@ -78,6 +81,22 @@ fun HomeScreen(
         } else {
             WorkoutResultsTable(emptyList())
         }
+
+        Spacer(modifier = Modifier.height(36.dp))
+        Text(text = "Upcoming IPPT",
+            style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        var nextIpptDate = remember {
+            mutableStateOf<LocalDate?>(null)
+        }
+        LaunchedEffect(Unit) {
+            val user = userViewModel.getUser()
+            user?.let {
+                nextIpptDate.value = it.nextIpptDate
+            }
+        }
+        DayCountdown(nextIpptDate = nextIpptDate.value)
     }
 }
 
@@ -87,8 +106,8 @@ fun StartExerciseCard(onClick: () -> Unit) {
     Card(
         onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp),
+            .fillMaxWidth(),
+//            .padding(5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(

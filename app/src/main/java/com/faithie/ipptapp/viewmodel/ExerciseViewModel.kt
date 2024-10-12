@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val WORKOUT_TIME = 30
+    private val WORKOUT_TIME = 0
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 
@@ -143,7 +143,7 @@ class ExerciseViewModel(application: Application) :
             _currentExercise.value = SitUpExercise()
         } else {
             // Current exercise is situp
-            if (!_isExerciseInProgress.value) { // situp exercise complete
+            if (!_isExerciseInProgress.value) { // situp exercise complete means both exercises complete
                 onCompleteWorkout(_numRepsPushUp.value, _numRepsSitUp.value)
             }
         }
