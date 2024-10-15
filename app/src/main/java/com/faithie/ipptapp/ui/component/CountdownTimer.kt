@@ -23,7 +23,7 @@ fun CountdownTimer(
     onCountdownFinished: () -> Unit
 ) {
     // State to keep track of countdown time
-    var countdown by remember { mutableStateOf(3) }
+    var countdown by remember { mutableStateOf(10) }
 
     val tg = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
 

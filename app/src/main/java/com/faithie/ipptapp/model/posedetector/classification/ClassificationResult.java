@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp.posedetector.classification;
+package com.faithie.ipptapp.model.posedetector.classification;
 
 import static java.util.Collections.max;
 

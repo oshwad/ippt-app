@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.navigation
+package com.faithie.ipptapp.ui.navigation
 
 import android.os.Build
 import android.util.Log
@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.faithie.ipptapp.data.User
+import com.faithie.ipptapp.model.entity.User
 import com.faithie.ipptapp.ui.screens.*
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel

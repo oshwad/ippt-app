@@ -2,8 +2,8 @@ package com.faithie.ipptapp.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.faithie.ipptapp.data.User
-import com.faithie.ipptapp.data.UserDatabase
+import com.faithie.ipptapp.model.entity.User
+import com.faithie.ipptapp.model.database.UserDatabase
 
 class UserViewModel(application: Application) :
     AndroidViewModel(application = application)

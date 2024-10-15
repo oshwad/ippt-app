@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.faithie.ipptapp.ui.theme.MyAppTheme
+import com.faithie.ipptapp.ui.style.MyAppTheme
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {

@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp.posedetector.classification;
+package com.faithie.ipptapp.model.posedetector.classification;
 
-import static com.faithie.ipptapp.posedetector.classification.Utils.multiply;
-import static com.faithie.ipptapp.posedetector.classification.Utils.multiplyAll;
+import static com.faithie.ipptapp.model.posedetector.classification.Utils.multiply;
+import static com.faithie.ipptapp.model.posedetector.classification.Utils.multiplyAll;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import android.util.Log;
 import android.util.Pair;
 
-import com.faithie.ipptapp.posedetector.repcounting.ExerciseType;
+import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType;
 import com.google.mlkit.vision.common.PointF3D;
 import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;

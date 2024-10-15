@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.posedetector.repcounting
+package com.faithie.ipptapp.model.posedetector.repcounting
 
 import android.util.Log
 import com.google.mlkit.vision.pose.Pose

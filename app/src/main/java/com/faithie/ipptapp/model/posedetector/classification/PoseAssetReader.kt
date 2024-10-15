@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.posedetector.training
+package com.faithie.ipptapp.model.posedetector.classification
 
 import android.content.Context
 import android.content.res.AssetManager

@@ -1,9 +1,10 @@
-package com.faithie.ipptapp.data
+package com.faithie.ipptapp.model.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.faithie.ipptapp.model.entity.User
 
 @Dao
 interface UserDao {

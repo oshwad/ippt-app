@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.faithie.ipptapp.posedetector.repcounting.ExerciseType
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark

@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.faithie.ipptapp.data.User
+import com.faithie.ipptapp.model.entity.User
 import com.faithie.ipptapp.ui.component.DatePickerDocked
 import com.faithie.ipptapp.ui.component.IntDropdownMenu
 import com.faithie.ipptapp.viewmodel.UserViewModel

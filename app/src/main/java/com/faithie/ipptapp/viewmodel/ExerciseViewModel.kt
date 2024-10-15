@@ -13,12 +13,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import com.faithie.ipptapp.data.WorkoutDatabase
-import com.faithie.ipptapp.data.WorkoutResult
-import com.faithie.ipptapp.posedetector.PoseDetectionAnalyser
-import com.faithie.ipptapp.posedetector.repcounting.ExerciseType
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
-import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise
+import com.faithie.ipptapp.model.database.WorkoutDatabase
+import com.faithie.ipptapp.model.entity.WorkoutResult
+import com.faithie.ipptapp.model.posedetector.PoseDetectionAnalyser
+import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
 import com.google.mlkit.vision.pose.PoseLandmark
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val WORKOUT_TIME = 10
+    private val WORKOUT_TIME = 60
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 

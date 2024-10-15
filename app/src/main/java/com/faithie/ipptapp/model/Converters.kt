@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.data
+package com.faithie.ipptapp.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -7,7 +7,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 class Converters {
     // Convert LocalDateTime to Long (epoch time)

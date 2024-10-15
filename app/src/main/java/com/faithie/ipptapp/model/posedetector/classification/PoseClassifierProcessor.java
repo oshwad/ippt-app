@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package com.faithie.ipptapp.posedetector.classification;
+package com.faithie.ipptapp.model.posedetector.classification;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.WorkerThread;
 
-import com.faithie.ipptapp.posedetector.repcounting.ExerciseType;
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise;
-import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise;
+import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise;
+import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType;
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise;
 import com.google.common.base.Preconditions;
 import com.google.mlkit.vision.pose.Pose;
 

@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
 import com.faithie.ipptapp.ui.component.CameraPreview
 import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.ui.component.CountdownTimer

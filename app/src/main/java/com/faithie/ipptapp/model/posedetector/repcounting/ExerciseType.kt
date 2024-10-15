@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.posedetector.repcounting
+package com.faithie.ipptapp.model.posedetector.repcounting
 
 import android.media.AudioManager
 import android.media.ToneGenerator

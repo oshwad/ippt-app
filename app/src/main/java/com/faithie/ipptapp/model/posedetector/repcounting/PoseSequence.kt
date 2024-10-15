@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.posedetector.repcounting
+package com.faithie.ipptapp.model.posedetector.repcounting
 
 data class PoseSequence(val poses: List<String>) {
     var currentIndex: Int = 0

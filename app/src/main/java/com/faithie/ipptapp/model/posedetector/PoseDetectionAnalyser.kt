@@ -1,4 +1,4 @@
-package com.faithie.ipptapp.posedetector
+package com.faithie.ipptapp.model.posedetector
 
 import android.content.Context
 import android.media.Image
@@ -8,10 +8,10 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.compose.runtime.State
-import com.faithie.ipptapp.posedetector.classification.PoseClassifierProcessor
-import com.faithie.ipptapp.posedetector.repcounting.ExerciseType
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
-import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise
+import com.faithie.ipptapp.model.posedetector.classification.PoseClassifierProcessor
+import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection

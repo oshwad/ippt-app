@@ -47,6 +47,7 @@ fun DatePickerDocked(
     initialValue: String?
 ): LocalDate? {
     var showDatePicker by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf<String?>(initialValue) }
 
     val todayMillis = remember {
         Calendar.getInstance().apply {
@@ -62,17 +63,11 @@ fun DatePickerDocked(
         }
     )
 
-    val selectedDateMillis: Long? = datePickerState.selectedDateMillis
-
-//    val selectedDate = selectedDateMillis?.let {
-//        convertMillisToDateString(it)
-//    } ?: ""
-
-    var selectedDate by remember { mutableStateOf<String?>(initialValue) }
-
-//    LaunchedEffect(showDatePicker) {
-//        selectedDate = datePickerState.selectedDateMillis?.let { convertMillisToDateString(it) }
-//    }
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        selectedDate = datePickerState.selectedDateMillis?.let {
+            convertMillisToDateString(it)
+        }
+    }
 
     Box(
         modifier = Modifier

@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.faithie.ipptapp.posedetector.repcounting.PushUpExercise
-import com.faithie.ipptapp.posedetector.repcounting.SitUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 
 @Composable
