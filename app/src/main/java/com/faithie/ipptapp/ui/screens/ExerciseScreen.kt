@@ -94,7 +94,6 @@ fun ExerciseScreen(
         CountdownTimer(
             onCountdownFinished = {
                 viewModel.startWorkout()
-                viewModel.setExerciseInProgress(true)
                 isStartPressed = false
             }
         )

@@ -9,14 +9,36 @@ abstract class ExerciseType {
     abstract val name: String
     abstract val poseSequence: PoseSequence
     open var numReps: Int = 0
-    companion object {
-        const val MIN_STRAIGHT_ANGLE = 155.0
-        const val MAX_STRAIGHT_ANGLE = 180.0
 
-        const val MIN_90DEG_ANGLE = 60.0
-        const val MAX_90DEG_ANGLE = 110.0
+    open val MIN_STRAIGHT_ANGLE = 153.0
+    open val MAX_STRAIGHT_ANGLE = 180.0
+
+    open val MIN_90DEG_ANGLE = 60.0
+    open val MAX_90DEG_ANGLE = 110.0
+
+    fun validateSequence(currentPose: Pose, currentClassification: String): Int {
+        // Check if the detected pose is the first pose in the sequence
+        if (poseSequence.currentIndex > 0 && poseSequence.isFirstPose(currentClassification)) {
+            poseSequence.currentIndex = 0 // Reset sequence to the first pose
+        }
+
+        if (poseSequence.isNextPoseValid(currentClassification)) {
+            if (validateCurrentStage(currentPose, currentClassification)) { // Check if the current stage is valid
+                poseSequence.advance() // Advance the sequence if valid
+
+                if (poseSequence.isCompleted()) {
+                    numReps++
+                    playBeep()
+                    poseSequence.currentIndex = 0
+                }
+                return numReps
+            }
+        }
+        return numReps
     }
-    abstract fun validateSequence(currentPose: Pose, currentClassification: String): Int
+
+    abstract fun validateCurrentStage(pose: Pose, currentPose: String): Boolean
+
     protected open fun calculateAngle(
         firstPoint: PoseLandmark,
         middlePoint: PoseLandmark,

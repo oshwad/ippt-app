@@ -94,6 +94,7 @@ class ExerciseViewModel(application: Application) :
     @RequiresApi(Build.VERSION_CODES.O)
     fun startWorkout() {
         startTimer()
+        _isExerciseInProgress.value = true
     }
 
     fun setExerciseInProgress(inProgress: Boolean) {

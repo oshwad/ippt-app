@@ -20,4 +20,8 @@ data class PoseSequence(val poses: List<String>) {
     fun isCompleted(): Boolean {
         return currentIndex >= poses.size
     }
+
+    fun isFirstPose(classification: String): Boolean {
+        return currentIndex == 0 && poses[currentIndex] == classification
+    }
 }
