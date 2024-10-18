@@ -1,6 +1,7 @@
 package com.faithie.ipptapp.ui.component
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Android
@@ -20,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.faithie.ipptapp.ui.screens.Screens
@@ -32,7 +35,9 @@ fun BottomNavBar(navController: NavController){
     var selected by remember {
         mutableIntStateOf(0)
     }
-    NavigationBar {
+    NavigationBar(
+        modifier = Modifier.height(50.dp)
+    ) {
         bottomNavItems.forEachIndexed { index, bottomNavItem ->
             NavigationBarItem(
                 selected = index == selected,
