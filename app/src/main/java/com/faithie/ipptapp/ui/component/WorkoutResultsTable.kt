@@ -122,27 +122,30 @@ fun WorkoutResultsTable(
             }
         }
 
+
         // Pagination controls
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                onClick = { if (currentPage > 0) currentPage-- }, // Decrease page if not on the first page
-                enabled = currentPage > 0
+        if (workoutResults.size > 5) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Previous", style = MaterialTheme.typography.labelMedium,)
-            }
-            Text(
-                text = "Page ${currentPage + 1} of $totalPages",
-                modifier = Modifier.align(Alignment.CenterVertically),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            Button(
-                onClick = { if (currentPage < totalPages - 1) currentPage++ }, // Increase page if not on the last page
-                enabled = currentPage < totalPages - 1
-            ) {
-                Text("Next", style = MaterialTheme.typography.labelMedium,)
+                Button(
+                    onClick = { if (currentPage > 0) currentPage-- }, // Decrease page if not on the first page
+                    enabled = currentPage > 0
+                ) {
+                    Text("Previous", style = MaterialTheme.typography.labelMedium,)
+                }
+                Text(
+                    text = "Page ${currentPage + 1} of $totalPages",
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Button(
+                    onClick = { if (currentPage < totalPages - 1) currentPage++ }, // Increase page if not on the last page
+                    enabled = currentPage < totalPages - 1
+                ) {
+                    Text("Next", style = MaterialTheme.typography.labelMedium,)
+                }
             }
         }
     }
