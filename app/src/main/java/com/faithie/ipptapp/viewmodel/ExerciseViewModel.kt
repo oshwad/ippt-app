@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val WORKOUT_TIME = 60
+    private val WORKOUT_TIME = 1
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 
@@ -97,10 +97,6 @@ class ExerciseViewModel(application: Application) :
         _isExerciseInProgress.value = true
     }
 
-    fun setExerciseInProgress(inProgress: Boolean) {
-        _isExerciseInProgress.value = inProgress
-    }
-
     fun resetExerciseViewModel() {
         analyser.value.resetReps()
         _poseLandmarks.value = emptyList()
@@ -147,7 +143,7 @@ class ExerciseViewModel(application: Application) :
         } else {
             // Current exercise is situp
             if (!_isExerciseInProgress.value) { // situp exercise complete means both exercises complete
-                onCompleteWorkout(_numRepsPushUp.value, _numRepsSitUp.value)
+                _isWorkoutCompleted.value = true
             }
         }
     }
@@ -160,13 +156,10 @@ class ExerciseViewModel(application: Application) :
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun onCompleteWorkout(pushUpReps: Int, sitUpReps: Int) {
-        _isWorkoutCompleted.value = true
-
+    fun insertResult(runTiming: Float) {
         val result = WorkoutResult(
-            pushUpReps = pushUpReps,
-            sitUpReps = sitUpReps,
+            pushUpReps = _numRepsPushUp.value,
+            sitUpReps = _numRepsSitUp.value,
             date = LocalDateTime.now()
         )
 

@@ -23,15 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
-import com.faithie.ipptapp.ui.component.CameraPreview
 import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.ui.component.CountdownTimer
-import com.faithie.ipptapp.ui.component.PoseGraphicOverlay
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -49,19 +46,19 @@ fun ExerciseScreen(
     var isStartPressed by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
 
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+//    val configuration = LocalConfiguration.current
+//    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     var numReps by remember { mutableStateOf(0) }
     if (currentExercise.name == PushUpExercise().name) {
         numReps = viewModel.numRepsPushUp.value
-        Log.d(TAG, "num reps pushup view model ${viewModel.numRepsPushUp.value}")
-        Log.d(TAG, "num reps pushup observed from view model state $numReps")
+//        Log.d(TAG, "num reps pushup view model ${viewModel.numRepsPushUp.value}")
+//        Log.d(TAG, "num reps pushup observed from view model state $numReps")
     }
     else {
         numReps = viewModel.numRepsSitUp.value
-        Log.d(TAG, "num reps situp view model ${viewModel.numRepsSitUp.value}")
-        Log.d(TAG, "num reps situp observed from view model state $numReps")
+//        Log.d(TAG, "num reps situp view model ${viewModel.numRepsSitUp.value}")
+//        Log.d(TAG, "num reps situp observed from view model state $numReps")
     }
 
     LaunchedEffect(Unit) {
@@ -71,11 +68,11 @@ fun ExerciseScreen(
 
     LaunchedEffect(isWorkoutCompleted) {
         if (isWorkoutCompleted) {
-            navController.navigate(Screens.ExerciseResults.route)
+            navController.navigate(Screens.WorkoutResults.route)
         }
     }
 
-    BackHandler(enabled = (isExerciseInProgress || !isWorkoutCompleted)) {
+    BackHandler {
         showExitDialog = true
     }
 
@@ -159,7 +156,7 @@ fun ExerciseScreen(
                         showExitDialog = false
                         viewModel.stopTimer()
                         viewModel.resetExerciseViewModel()
-                        navController.popBackStack()  // Navigate back or exit
+                        navController.popBackStack()
                     }
                 ) {
                     Text(
