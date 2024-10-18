@@ -12,6 +12,7 @@ import com.faithie.ipptapp.model.posedetector.classification.PoseClassifierProce
 import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType
 import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
 import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.ValidationResult
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
@@ -26,7 +27,7 @@ class PoseDetectionAnalyser(
     private val context: Context,
     private val getImageDim: (ImageProxy) -> Unit,
     private val onDetectPose: (List<PoseLandmark>) -> Unit,
-    private val onClassifiedPose: (Int) -> Unit,
+    private val onClassifiedPose: (Int, List<ValidationResult>) -> Unit,
     private var currentExercise: State<ExerciseType>,
     private val isExerciseInProgress: State<Boolean>
 ): ImageAnalysis.Analyzer {
@@ -78,30 +79,27 @@ class PoseDetectionAnalyser(
         }
     }
 
-    private fun classifyAndCountReps(result: Pose) {
+    private fun classifyAndCountReps(pose: Pose) {
 //        Log.d(TAG, "classifying and counting reps")
+        val classificationLabel: String?
+        val numReps: Int
+        var validationResults: List<ValidationResult> = emptyList()
+
         if (isExerciseInProgress.value) {
-            val poseClassificationRes: String? = poseClassifierProcessor.getClassifiedPose(result, currentExercise.value)
-            if (poseClassificationRes != null){
-                if(curClassification != poseClassificationRes){
-                    Log.d(TAG, "classified pose is: $poseClassificationRes")
-                    curClassification = poseClassificationRes
+            classificationLabel = poseClassifierProcessor.getClassifiedPose(pose, currentExercise.value)
+            if (classificationLabel != null){
+                if(curClassification != classificationLabel){
+                    Log.d(TAG, "classified pose is: $classificationLabel")
+                    curClassification = classificationLabel
                 }
-                val numReps = when (currentExercise.value) {
-                    is PushUpExercise -> poseClassifierProcessor.pushUpExercise.validateSequence(
-                        result, poseClassificationRes
-                    )
-                    is SitUpExercise -> poseClassifierProcessor.sitUpExercise.validateSequence(
-                        result, poseClassificationRes
-                    )
-                    else -> {
-                        poseClassifierProcessor.pushUpExercise.validateSequence(
-                            result, poseClassificationRes
-                        )
-                    }
+                if (currentExercise.value is PushUpExercise) {
+                    numReps = poseClassifierProcessor.pushUpExercise.validateSequence(pose, classificationLabel)
+                    validationResults = poseClassifierProcessor.pushUpExercise.validationResults
+                } else {
+                    numReps = poseClassifierProcessor.sitUpExercise.validateSequence(pose, classificationLabel)
                 }
 
-                onClassifiedPose(numReps)
+                onClassifiedPose(numReps, validationResults)
             }
         }
     }

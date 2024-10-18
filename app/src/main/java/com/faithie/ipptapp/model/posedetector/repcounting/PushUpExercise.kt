@@ -30,6 +30,8 @@ class PushUpExercise : ExerciseType() {
         }
     }
 
+    var validationResults = emptyList<ValidationResult>()
+
     private fun validatePushUpDown(pose: Pose): Boolean {
         val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
         val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
@@ -53,6 +55,19 @@ class PushUpExercise : ExerciseType() {
         val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee)
         val leftArmAngle = calculateAngle(leftShoulder, leftElbow, leftWrist)
         val rightArmAngle = calculateAngle(rightShoulder, rightElbow, rightWrist)
+
+        val isLeftBodyValid = leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+        val isRightBodyValid = rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+        val isLeftArmValid = leftArmAngle <= MAX_90DEG_ANGLE
+        val isRightArmValid = rightArmAngle <= MAX_90DEG_ANGLE
+
+        validationResults = listOf(
+            ValidationResult(PUSHUP_DOWN,"leftBody", leftBodyAngle, isLeftBodyValid),
+            ValidationResult(PUSHUP_DOWN,"rightBody", rightBodyAngle, isRightBodyValid),
+            ValidationResult(PUSHUP_DOWN,"leftArm", leftArmAngle, isLeftArmValid),
+            ValidationResult(PUSHUP_DOWN,"rightArm", rightArmAngle, isRightArmValid)
+        )
+        Log.d(TAG,"$validationResults")
 
         if (leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
             && rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
@@ -80,6 +95,15 @@ class PushUpExercise : ExerciseType() {
 
         val leftBodyAngle = calculateAngle(leftShoulder, leftHip, leftKnee)
         val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee)
+
+        val isLeftBodyValid = leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+        val isRightBodyValid = rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+
+        validationResults = listOf(
+            ValidationResult(PUSHUP_MID,"leftBody", leftBodyAngle, isLeftBodyValid),
+            ValidationResult(PUSHUP_MID,"rightBody", rightBodyAngle, isRightBodyValid),
+        )
+        Log.d(TAG,"$validationResults")
 
         if (leftBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE &&
             rightBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE) {
@@ -114,6 +138,19 @@ class PushUpExercise : ExerciseType() {
         val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee)
         val leftArmAngle = calculateAngle(leftShoulder, leftElbow, leftWrist)
         val rightArmAngle = calculateAngle(rightShoulder, rightElbow, rightWrist)
+
+        val isLeftBodyValid = leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+        val isRightBodyValid = rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
+        val isLeftArmValid = leftArmAngle >= MIN_STRAIGHT_ANGLE
+        val isRightArmValid = rightArmAngle >= MIN_STRAIGHT_ANGLE
+
+        validationResults = listOf(
+            ValidationResult(PUSHUP_UP,"leftBody", leftBodyAngle, isLeftBodyValid),
+            ValidationResult(PUSHUP_UP,"rightBody", rightBodyAngle, isRightBodyValid),
+            ValidationResult(PUSHUP_UP,"leftArm", leftArmAngle, isLeftArmValid),
+            ValidationResult(PUSHUP_UP,"rightArm", rightArmAngle, isRightArmValid)
+        )
+        Log.d(TAG,"$validationResults")
 
         if ((leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
             && rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE

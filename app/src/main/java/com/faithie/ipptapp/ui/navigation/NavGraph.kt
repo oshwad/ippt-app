@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.faithie.ipptapp.model.entity.User
 import com.faithie.ipptapp.ui.screens.*
+import com.faithie.ipptapp.viewmodel.DevExerciseViewModel
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
 import com.faithie.ipptapp.viewmodel.RecordsViewModel
@@ -26,7 +27,8 @@ fun NavGraph(
     exerciseViewModel: ExerciseViewModel,
     poseTrainingViewModel: PoseTrainingViewModel,
     recordsViewModel: RecordsViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    devExerciseViewModel: DevExerciseViewModel
 ) {
     var startDest = ""
     var user by remember { mutableStateOf<User?>(null) }
@@ -68,6 +70,9 @@ fun NavGraph(
         }
         composable(Screens.UserDetailsFormScreen.route) {
             UserDetailsFormScreen(navController, userViewModel)
+        }
+        composable(Screens.DevExercise.route) {
+            DevExerciseScreen(navController, devExerciseViewModel)
         }
     }
 }

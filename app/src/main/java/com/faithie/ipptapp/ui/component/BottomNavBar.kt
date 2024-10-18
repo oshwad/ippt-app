@@ -3,9 +3,13 @@ package com.faithie.ipptapp.ui.component
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.InsertChart
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Android
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.InsertChart
 import androidx.compose.material3.Icon
@@ -80,6 +84,12 @@ val bottomNavItems = listOf(
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle
     ),
+    BottomNavItem(
+        title = "Dev Camera",
+        route = Screens.DevExercise.route,
+        selectedIcon = Icons.Filled.Build,
+        unselectedIcon = Icons.Outlined.Build
+    )
 )
 data class BottomNavItem(
     val title: String,

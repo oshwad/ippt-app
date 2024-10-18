@@ -3,9 +3,7 @@ package com.faithie.ipptapp.viewmodel
 import android.app.Application
 import android.media.AudioManager
 import android.media.ToneGenerator
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
@@ -13,26 +11,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import com.faithie.ipptapp.model.database.WorkoutDatabase
-import com.faithie.ipptapp.model.entity.WorkoutResult
 import com.faithie.ipptapp.model.posedetector.PoseDetectionAnalyser
 import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType
 import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
 import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
+import com.faithie.ipptapp.model.posedetector.repcounting.ValidationResult
 import com.google.mlkit.vision.pose.PoseLandmark
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
-class ExerciseViewModel(application: Application) :
-    AndroidViewModel(application = application) {
-
-    private val TAG = "ExerciseViewModel"
-    private val workoutTime = 30
+class DevExerciseViewModel(application: Application): AndroidViewModel(application = application) {
+    private val TAG = "DevExerciseViewModel"
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 
@@ -41,41 +34,29 @@ class ExerciseViewModel(application: Application) :
 
     private val _currentExercise = mutableStateOf<ExerciseType>(PushUpExercise())
     val currentExercise: State<ExerciseType> get() = _currentExercise
-
-    private val _timer = mutableIntStateOf(workoutTime)
-    val timer: State<Int> get() = _timer
     val isExerciseInProgress: State<Boolean> get() = _isExerciseInProgress
     private val _isExerciseInProgress = mutableStateOf(false)
-    val isWorkoutCompleted: State<Boolean> get() = _isWorkoutCompleted
-    private val _isWorkoutCompleted = mutableStateOf(false)
     private val _numRepsPushUp = mutableIntStateOf(0)
     val numRepsPushUp: State<Int> get() = _numRepsPushUp
     private val _numRepsSitUp = mutableIntStateOf(0)
     val numRepsSitUp: State<Int> get() = _numRepsSitUp
-    private val workoutResultDao = WorkoutDatabase.getDatabase(application).workoutResultDao()
-
-    private var _imageWidth = mutableStateOf(0)
-    val imageWidth: State<Int> get() = _imageWidth
-    private var _imageHeight = mutableStateOf(0)
-    val imageHeight: State<Int> get() = _imageHeight
+    private val _validationResults = mutableStateOf(emptyList<ValidationResult>())
+    val validationResults: State<List<ValidationResult>> get() = _validationResults
     val tg = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
 
     private var analyser = mutableStateOf<PoseDetectionAnalyser>(
         PoseDetectionAnalyser(
             getApplication(),
-            getImageDim = { imageProxy ->
-                // Update image dimensions in the ViewModel
-                _imageWidth.value = imageProxy.width
-                _imageHeight.value = imageProxy.height
-//                Log.d(TAG, "imagewidth: ${imageWidth.value} imageHeight: ${imageHeight.value}")
+            getImageDim = { _ ->
             },
             onDetectPose = { poseLandmarks ->
                 // Update the live data with the detected pose landmarks
                 _poseLandmarks.value = poseLandmarks
             },
-            onClassifiedPose = { reps, _ ->
-//                Log.d(TAG, "numReps: $reps")
+            onClassifiedPose = { reps, validationRes ->
                 updateReps(reps)
+                _validationResults.value = validationRes
+                Log.d(TAG, "${validationResults.value}")
             },
             currentExercise = _currentExercise,
             isExerciseInProgress
@@ -91,61 +72,17 @@ class ExerciseViewModel(application: Application) :
         cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
     })
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun startWorkout() {
-        startTimer()
         _isExerciseInProgress.value = true
     }
 
     fun resetExerciseViewModel() {
         analyser.value.resetReps()
         _poseLandmarks.value = emptyList()
-        _currentExercise.value = PushUpExercise()
-        _timer.value = workoutTime
         _isExerciseInProgress.value = false
-        _isWorkoutCompleted.value = false
         _numRepsPushUp.value = 0
         _numRepsSitUp.value = 0
-        Log.d(TAG, "resetting exercise view model")
-    }
-
-    private var workoutJob: Job? = null
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun startTimer() {
-        workoutJob = CoroutineScope(Dispatchers.Main).launch {
-            for (i in workoutTime downTo 0) {
-                _timer.value = i
-                delay(1000L)
-            }
-            tg.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP)
-            onCompleteExercise()
-        }
-    }
-
-    // This function can be used to stop the timer when leaving the screen
-    fun stopTimer() {
-        workoutJob?.cancel()  // Cancel the timer coroutine
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        stopTimer()  // Cancel the coroutine when ViewModel is cleared
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun onCompleteExercise() {
-        _isExerciseInProgress.value = false
-        _poseLandmarks.value = emptyList()
-        _timer.value = workoutTime
-        if (_currentExercise.value is PushUpExercise) {
-            _currentExercise.value = SitUpExercise()
-        } else {
-            // Current exercise is situp
-            if (!_isExerciseInProgress.value) { // situp exercise complete means both exercises complete
-                _isWorkoutCompleted.value = true
-            }
-        }
+        Log.d(TAG, "resetting view model")
     }
 
     private fun updateReps(reps: Int) {
@@ -156,16 +93,7 @@ class ExerciseViewModel(application: Application) :
         }
     }
 
-    fun insertResult(runTiming: Float) {
-        val result = WorkoutResult(
-            pushUpReps = _numRepsPushUp.value,
-            sitUpReps = _numRepsSitUp.value,
-            date = LocalDateTime.now()
-        )
-
-        CoroutineScope(Dispatchers.IO).launch {
-            workoutResultDao.insertResult(result)
-//            Log.d(TAG, "Workout database: " + workoutResultDao.getAllResults())
-        }
+    fun setExerciseType(exerciseType: ExerciseType) {
+        _currentExercise.value = exerciseType
     }
 }

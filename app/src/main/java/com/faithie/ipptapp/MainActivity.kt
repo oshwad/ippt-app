@@ -18,6 +18,8 @@ import com.faithie.ipptapp.ui.screens.Screens
 import com.faithie.ipptapp.ui.style.MyAppTheme
 import com.faithie.ipptapp.ui.component.BottomNavBar
 import com.faithie.ipptapp.utils.PermissionHandler
+import com.faithie.ipptapp.viewmodel.DevExerciseViewModel
+import com.faithie.ipptapp.viewmodel.DevExerciseViewModelFactory
 import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 import com.faithie.ipptapp.viewmodel.ExerciseViewModelFactory
 import com.faithie.ipptapp.viewmodel.PoseTrainingViewModel
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
         val poseTrainingViewModel: PoseTrainingViewModel by viewModels { PoseTrainingViewModelFactory(application) }
         val recordsViewModel: RecordsViewModel by viewModels { RecordsViewModelFactory(application) }
         val userViewModel: UserViewModel by viewModels { UserViewModelFactory(application) }
+        val devExerciseViewModel: DevExerciseViewModel by viewModels { DevExerciseViewModelFactory(application) }
 
         setContent {
             MyAppTheme {
@@ -53,6 +56,7 @@ class MainActivity : ComponentActivity() {
                     poseTrainingViewModel,
                     recordsViewModel,
                     userViewModel,
+                    devExerciseViewModel
                 )
             }
         }
@@ -66,7 +70,8 @@ fun MyApp(
     exerciseViewModel: ExerciseViewModel,
     poseTrainingViewModel: PoseTrainingViewModel,
     recordsViewModel: RecordsViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    devExerciseViewModel: DevExerciseViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -84,7 +89,8 @@ fun MyApp(
             exerciseViewModel = exerciseViewModel,
             poseTrainingViewModel = poseTrainingViewModel,
             recordsViewModel = recordsViewModel,
-            userViewModel = userViewModel
+            userViewModel = userViewModel,
+            devExerciseViewModel = devExerciseViewModel
         )
     }
 }
