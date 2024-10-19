@@ -40,6 +40,9 @@ class DevExerciseViewModel(application: Application): AndroidViewModel(applicati
     val numRepsPushUp: State<Int> get() = _numRepsPushUp
     private val _numRepsSitUp = mutableIntStateOf(0)
     val numRepsSitUp: State<Int> get() = _numRepsSitUp
+    private val _curClassLabel = mutableStateOf("")
+    val curClassLabel: State<String> get() = _curClassLabel
+
     private val _validationResults = mutableStateOf(emptyList<ValidationResult>())
     val validationResults: State<List<ValidationResult>> get() = _validationResults
     val tg = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
@@ -53,8 +56,9 @@ class DevExerciseViewModel(application: Application): AndroidViewModel(applicati
                 // Update the live data with the detected pose landmarks
                 _poseLandmarks.value = poseLandmarks
             },
-            onClassifiedPose = { reps, validationRes ->
+            onClassifiedPose = { reps, classLabel, validationRes ->
                 updateReps(reps)
+                _curClassLabel.value = classLabel
                 _validationResults.value = validationRes
                 Log.d(TAG, "${validationResults.value}")
             },

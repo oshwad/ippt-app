@@ -27,7 +27,7 @@ class PoseDetectionAnalyser(
     private val context: Context,
     private val getImageDim: (ImageProxy) -> Unit,
     private val onDetectPose: (List<PoseLandmark>) -> Unit,
-    private val onClassifiedPose: (Int, List<ValidationResult>) -> Unit,
+    private val onClassifiedPose: (Int, String, List<ValidationResult>) -> Unit,
     private var currentExercise: State<ExerciseType>,
     private val isExerciseInProgress: State<Boolean>
 ): ImageAnalysis.Analyzer {
@@ -97,9 +97,10 @@ class PoseDetectionAnalyser(
                     validationResults = poseClassifierProcessor.pushUpExercise.validationResults
                 } else {
                     numReps = poseClassifierProcessor.sitUpExercise.validateSequence(pose, classificationLabel)
+                    validationResults = poseClassifierProcessor.sitUpExercise.validationResults
                 }
 
-                onClassifiedPose(numReps, validationResults)
+                onClassifiedPose(numReps, classificationLabel, validationResults)
             }
         }
     }

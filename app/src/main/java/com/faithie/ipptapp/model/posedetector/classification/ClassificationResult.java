@@ -49,10 +49,21 @@ public class ClassificationResult {
       return "unknown";
     }
 
-    return max(
-        classConfidences.entrySet(),
-        (entry1, entry2) -> (int) (entry1.getValue() - entry2.getValue()))
-        .getKey();
+    Map.Entry<String, Float> maxEntry = max(
+            classConfidences.entrySet(),
+            (entry1, entry2) -> Float.compare(entry1.getValue(), entry2.getValue())
+    );
+
+    if (maxEntry.getValue() < 0.5) { // return unknown if max confidence class score is less than 0.5
+      return "unknown";
+    }
+
+    return maxEntry.getKey();
+
+//    return max(
+//        classConfidences.entrySet(),
+//        (entry1, entry2) -> (int) (entry1.getValue() - entry2.getValue()))
+//        .getKey();
   }
 
   public void incrementClassConfidence(String className) {

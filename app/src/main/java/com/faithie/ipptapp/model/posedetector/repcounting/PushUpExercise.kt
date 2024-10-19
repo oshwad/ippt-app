@@ -6,6 +6,7 @@ import com.google.mlkit.vision.pose.PoseLandmark
 
 class PushUpExercise : ExerciseType() {
     private val TAG = "PushUpExercise"
+    var validationResults = emptyList<ValidationResult>()
     override val name = "PushUp"
     companion object{
         const val PUSHUP_DOWN = "pushup_down"
@@ -19,7 +20,7 @@ class PushUpExercise : ExerciseType() {
     )
 
     override val MIN_STRAIGHT_ANGLE = 160.0
-    override val MAX_90DEG_ANGLE = 90.0
+    override val MAX_90DEG_ANGLE = 70.0
 
     override fun validateCurrentStage(pose: Pose, currentPose: String): Boolean {
         return when (currentPose) {
@@ -29,8 +30,6 @@ class PushUpExercise : ExerciseType() {
             else -> false
         }
     }
-
-    var validationResults = emptyList<ValidationResult>()
 
     private fun validatePushUpDown(pose: Pose): Boolean {
         val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
@@ -67,7 +66,6 @@ class PushUpExercise : ExerciseType() {
             ValidationResult(PUSHUP_DOWN,"leftArm", leftArmAngle, isLeftArmValid),
             ValidationResult(PUSHUP_DOWN,"rightArm", rightArmAngle, isRightArmValid)
         )
-        Log.d(TAG,"$validationResults")
 
         if (leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
             && rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
@@ -103,7 +101,6 @@ class PushUpExercise : ExerciseType() {
             ValidationResult(PUSHUP_MID,"leftBody", leftBodyAngle, isLeftBodyValid),
             ValidationResult(PUSHUP_MID,"rightBody", rightBodyAngle, isRightBodyValid),
         )
-        Log.d(TAG,"$validationResults")
 
         if (leftBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE &&
             rightBodyAngle in MIN_STRAIGHT_ANGLE..MAX_STRAIGHT_ANGLE) {
@@ -150,7 +147,6 @@ class PushUpExercise : ExerciseType() {
             ValidationResult(PUSHUP_UP,"leftArm", leftArmAngle, isLeftArmValid),
             ValidationResult(PUSHUP_UP,"rightArm", rightArmAngle, isRightArmValid)
         )
-        Log.d(TAG,"$validationResults")
 
         if ((leftBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE
             && rightBodyAngle in MIN_STRAIGHT_BODY_ANGLE..MAX_STRAIGHT_ANGLE

@@ -2,8 +2,9 @@ package com.faithie.ipptapp.model.posedetector.repcounting
 
 data class ValidationResult(
     val classification: String,
-    val location: String,
-    val angle: Float,
-    val valid: Boolean,
-    val handEarDist: Float? = null
+    val location: String? = null,
+    val angle: Float? = null,
+    val validAngles: Boolean? = null,
+    val handEarDist: Float? = null,
+    val validHandEarDist: Boolean? = null
 )

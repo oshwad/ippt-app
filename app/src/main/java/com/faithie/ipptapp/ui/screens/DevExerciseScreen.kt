@@ -34,7 +34,6 @@ import com.faithie.ipptapp.model.posedetector.repcounting.PushUpExercise
 import com.faithie.ipptapp.model.posedetector.repcounting.SitUpExercise
 import com.faithie.ipptapp.ui.component.CameraPreviewWithGraphicOverlay
 import com.faithie.ipptapp.viewmodel.DevExerciseViewModel
-import com.faithie.ipptapp.viewmodel.ExerciseViewModel
 
 @Composable
 fun DevExerciseScreen(
@@ -45,6 +44,7 @@ fun DevExerciseScreen(
     val currentExercise by viewModel.currentExercise
     val isExerciseInProgress by viewModel.isExerciseInProgress
     val validationResults by viewModel.validationResults
+    val curClassLabel by viewModel.curClassLabel
     Log.d(TAG, "$validationResults")
 
     var expanded by remember { mutableStateOf(false) }
@@ -112,13 +112,38 @@ fun DevExerciseScreen(
             }
         }
 
-        validationResults.forEach {
+        if (curClassLabel.isNotEmpty()) {
             Text(
-                "${it.classification}, valid: ${it.valid}, ${it.location} angle: ${it.angle}, handEarDist: ${it.handEarDist}",
+                "current classification: $curClassLabel",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White
             )
         }
+        if (validationResults.isNotEmpty()) {
+            Text(
+                "validation result from: ${validationResults[0].classification}",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White
+            )
+        }
+        if(currentExercise is PushUpExercise) {
+            validationResults.forEach {
+                Text(
+                    "${it.location} - valid: ${it.validAngles}, angle: ${it.angle}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White
+                )
+            }
+        } else if (currentExercise is SitUpExercise) {
+            validationResults.forEach {
+                Text(
+                    "${it.location} - valid: ${it.validAngles}, angle: ${it.angle}\nleftHandEar - valid: ${it.validHandEarDist}, handEarDist: ${it.handEarDist}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White
+                )
+            }
+        }
+
 
         if (isExerciseInProgress) {
             Text(

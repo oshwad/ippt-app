@@ -32,7 +32,7 @@ class ExerciseViewModel(application: Application) :
     AndroidViewModel(application = application) {
 
     private val TAG = "ExerciseViewModel"
-    private val workoutTime = 30
+    private val workoutTime = 60
 
     private var executor = mutableStateOf(Executors.newSingleThreadExecutor())
 
@@ -73,7 +73,7 @@ class ExerciseViewModel(application: Application) :
                 // Update the live data with the detected pose landmarks
                 _poseLandmarks.value = poseLandmarks
             },
-            onClassifiedPose = { reps, _ ->
+            onClassifiedPose = { reps, _, _ ->
 //                Log.d(TAG, "numReps: $reps")
                 updateReps(reps)
             },

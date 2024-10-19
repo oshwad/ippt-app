@@ -3,9 +3,11 @@ package com.faithie.ipptapp.model.posedetector.repcounting
 import android.util.Log
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
+import kotlin.math.sqrt
 
 class SitUpExercise : ExerciseType() {
     private val TAG = "SitUpExercise"
+    var validationResults = emptyList<ValidationResult>()
     override val name = "SitUp"
     companion object{
         const val SITUP_UP = "situp_up"
@@ -28,30 +30,121 @@ class SitUpExercise : ExerciseType() {
     }
 
     private fun validateSitUpUp(pose: Pose): Boolean {
-        Log.d(TAG, "situp_up")
-        val isHandsCuppingEars = validateHandsCuppingEars(pose)
+        val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
+        val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
+        val leftHip = pose.getPoseLandmark(PoseLandmark.LEFT_HIP)
+        val rightHip = pose.getPoseLandmark(PoseLandmark.RIGHT_HIP)
+        val leftAnkle = pose.getPoseLandmark(PoseLandmark.LEFT_ANKLE)
+        val rightKnee = pose.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)
 
-        if (!isHandsCuppingEars) {
+        val leftEar = pose.getPoseLandmark(PoseLandmark.LEFT_EAR)
+        val rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
+        val leftWrist = pose.getPoseLandmark(PoseLandmark.LEFT_INDEX)
+        val rightWrist = pose.getPoseLandmark(PoseLandmark.RIGHT_INDEX)
+
+        if (leftShoulder == null || rightShoulder == null || leftHip == null ||
+            rightHip == null || leftAnkle == null || rightKnee == null ||
+            leftEar == null || rightEar == null || leftWrist == null || rightWrist == null) {
             return false
         }
 
-        return validateBodyPositionForSitUp(pose, MIN_90DEG_ANGLE)
+        val leftBodyAngle = calculateAngle(leftShoulder, leftHip, leftAnkle)
+        val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee)
+
+        val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
+        val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
+
+        val isLeftBodyValid = leftBodyAngle >= MIN_90DEG_ANGLE
+        val isRightBodyValid = rightBodyAngle >= MIN_90DEG_ANGLE
+
+        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+
+        validationResults = listOf(
+            ValidationResult(SITUP_UP, "leftBody", leftBodyAngle, isLeftBodyValid, leftHandEarDistance, isLeftHandEarDistValid),
+            ValidationResult(SITUP_UP, "rightBody", rightBodyAngle, isRightBodyValid, rightHandEarDistance, isRightHandEarDistValid)
+        )
+
+        if (isLeftBodyValid && isRightBodyValid && isLeftHandEarDistValid && isRightHandEarDistValid) {
+            Log.d(TAG, "situp_down SUCCESS leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+            return true
+        } else {
+            Log.d(TAG, "situp_down failed leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+            return false
+        }
     }
 
     private fun validateSitUpMid(pose: Pose): Boolean {
-        Log.d(TAG, "situp_mid")
-        return validateHandsCuppingEars(pose)
-    }
+        val leftEar = pose.getPoseLandmark(PoseLandmark.LEFT_EAR)
+        val rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
+        val leftWrist = pose.getPoseLandmark(PoseLandmark.LEFT_INDEX)
+        val rightWrist = pose.getPoseLandmark(PoseLandmark.RIGHT_INDEX)
 
-    private fun validateSitUpDown(pose: Pose): Boolean {
-        Log.d(TAG, "situp_down")
-        val isHandsCuppingEars = validateHandsCuppingEars(pose)
-
-        if (!isHandsCuppingEars) {
+        if (leftEar == null || rightEar == null || leftWrist == null || rightWrist == null) {
             return false
         }
 
-        return validateBodyPositionForSitUp(pose, MIN_STRAIGHT_ANGLE)
+        val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
+        val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
+
+        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+
+        validationResults = listOf(
+            ValidationResult(SITUP_MID, location = "left hand-ear dist", handEarDist = leftHandEarDistance, validHandEarDist = isLeftHandEarDistValid),
+            ValidationResult(SITUP_MID, location = "right hand-ear dist", handEarDist = rightHandEarDistance, validHandEarDist = isRightHandEarDistValid)
+        )
+
+        if (isLeftHandEarDistValid && isRightHandEarDistValid) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private fun validateSitUpDown(pose: Pose): Boolean {
+        val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
+        val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
+        val leftHip = pose.getPoseLandmark(PoseLandmark.LEFT_HIP)
+        val rightHip = pose.getPoseLandmark(PoseLandmark.RIGHT_HIP)
+        val leftAnkle = pose.getPoseLandmark(PoseLandmark.LEFT_ANKLE)
+        val rightKnee = pose.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)
+
+        val leftEar = pose.getPoseLandmark(PoseLandmark.LEFT_EAR)
+        val rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
+        val leftWrist = pose.getPoseLandmark(PoseLandmark.LEFT_INDEX)
+        val rightWrist = pose.getPoseLandmark(PoseLandmark.RIGHT_INDEX)
+
+        if (leftShoulder == null || rightShoulder == null || leftHip == null ||
+            rightHip == null || leftAnkle == null || rightKnee == null ||
+            leftEar == null || rightEar == null || leftWrist == null || rightWrist == null) {
+            return false
+        }
+
+        val leftBodyAngle = calculateAngle(leftShoulder, leftHip, leftAnkle)
+        val rightBodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee)
+
+        val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
+        val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
+
+        val isLeftBodyValid = leftBodyAngle >= MIN_STRAIGHT_ANGLE
+        val isRightBodyValid = rightBodyAngle >= MIN_STRAIGHT_ANGLE
+
+        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+
+        validationResults = listOf(
+            ValidationResult(SITUP_DOWN, "leftBody", leftBodyAngle, isLeftBodyValid, leftHandEarDistance, isLeftHandEarDistValid),
+            ValidationResult(SITUP_DOWN, "rightBody", rightBodyAngle, isRightBodyValid, rightHandEarDistance, isRightHandEarDistValid)
+        )
+
+        if (isLeftBodyValid && isRightBodyValid && isLeftHandEarDistValid && isRightHandEarDistValid) {
+            Log.d(TAG, "situp_down SUCCESS leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+            return true
+        } else {
+            Log.d(TAG, "situp_down failed leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+            return false
+        }
     }
 
     private fun validateBodyPositionForSitUp(pose: Pose, requiredAngle: Double): Boolean {
@@ -100,9 +193,9 @@ class SitUpExercise : ExerciseType() {
         return true
     }
 
-    private fun calculateDistance(landmark1: PoseLandmark, landmark2: PoseLandmark): Double {
+    private fun calculateDistance(landmark1: PoseLandmark, landmark2: PoseLandmark): Float {
         val dx = landmark1.position.x - landmark2.position.x
         val dy = landmark1.position.y - landmark2.position.y
-        return Math.sqrt((dx * dx + dy * dy).toDouble())
+        return sqrt((dx * dx + dy * dy).toDouble()).toFloat()
     }
 }
