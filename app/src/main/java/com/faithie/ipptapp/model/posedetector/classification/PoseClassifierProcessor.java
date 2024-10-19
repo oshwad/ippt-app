@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Google LLC. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.faithie.ipptapp.model.posedetector.classification;
 
 import android.content.Context;
@@ -40,10 +24,10 @@ import java.util.List;
  */
 public class PoseClassifierProcessor {
   private static final String TAG = "PoseClassifierProcessor";
-  private static final String POSE_SAMPLES_FILE = "poses.csv";
   private final boolean isStreamMode;
   private EMASmoothing emaSmoothing;
-  private PoseClassifier poseClassifier;
+  private PoseClassifier pushUpClassifier;
+  private PoseClassifier sitUpClassifier;
   public PushUpExercise pushUpExercise;
   public SitUpExercise sitUpExercise;
 
@@ -57,46 +41,58 @@ public class PoseClassifierProcessor {
     }
     pushUpExercise = new PushUpExercise();
     sitUpExercise = new SitUpExercise();
-    loadPoseSamples(context);
-    Log.d(TAG, "Pose samples loaded");
+
+    // Load classifiers for each exercise
+    pushUpClassifier = loadPoseClassifier(context, "pushup_poses.csv");
+    sitUpClassifier = loadPoseClassifier(context, "situp_poses.csv");
   }
 
-  private void loadPoseSamples(Context context) {
+  /**
+   * Load pose samples from a CSV file and create a PoseClassifier.
+   */
+  private PoseClassifier loadPoseClassifier(Context context, String fileName) {
     List<PoseSample> poseSamples = new ArrayList<>();
     try {
-//      BufferedReader reader = new BufferedReader(
-//          new InputStreamReader(context.getAssets().open(POSE_SAMPLES_FILE)));
-      File csvFile = new File(context.getExternalFilesDir(null), POSE_SAMPLES_FILE);
+      File csvFile = new File(context.getExternalFilesDir(null), fileName);
       BufferedReader reader = new BufferedReader(new FileReader(csvFile));
-      Log.d(TAG, "poses.csv file loaded");
+      Log.d(TAG, fileName + " file loaded");
       String csvLine = reader.readLine();
       while (csvLine != null) {
-        // If line is not a valid {@link PoseSample}, we'll get null and skip adding to the list.
         PoseSample poseSample = PoseSample.getPoseSample(csvLine, ",");
         if (poseSample != null) {
           poseSamples.add(poseSample);
         }
         csvLine = reader.readLine();
       }
+      reader.close();
     } catch (IOException e) {
-      Log.e(TAG, "Error when loading pose samples.\n" + e);
+      Log.e(TAG, "Error when loading pose samples from " + fileName + ".\n" + e);
     }
-    poseClassifier = new PoseClassifier(poseSamples);
+    return new PoseClassifier(poseSamples);
   }
 
   @WorkerThread
   public String getClassifiedPose(Pose pose, ExerciseType exerciseType) {
-//    Log.d(TAG, "classifying pose");
-    ClassificationResult classification = poseClassifier.classify(pose, exerciseType);
+    PoseClassifier selectedClassifier;
+
+    // Use the appropriate classifier based on exercise type
+    if (exerciseType instanceof PushUpExercise) {
+      selectedClassifier = pushUpClassifier;
+    } else if (exerciseType instanceof SitUpExercise) {
+      selectedClassifier = sitUpClassifier;
+    } else {
+      return "Unknown exercise type in " + TAG;
+    }
+
+    // Classify the pose
+    ClassificationResult classification = selectedClassifier.classify(pose, exerciseType);
 
     if (isStreamMode) {
-      // Feed pose to smoothing even if no pose found.
       classification = emaSmoothing.getSmoothedResult(classification);
-
       return classification.getMaxConfidenceClass();
     }
 
-    return "unknown at " + TAG; // Default case, if it's not stream mode or other conditions
+    return "unknown at " + TAG; // Default case
   }
 
   public void resetReps() {

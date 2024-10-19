@@ -21,6 +21,7 @@ import static com.faithie.ipptapp.model.posedetector.classification.Utils.multip
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.faithie.ipptapp.model.posedetector.repcounting.ExerciseType;
@@ -116,6 +117,7 @@ public class PoseClassifier {
               .contains(exerciseType.getExerciseName().toLowerCase())) {
         continue; // Skip samples that don't match the exercise type
       }
+      Log.d(TAG, "current pose sample" + poseSample.getClassName());
 
       List<PointF3D> sampleEmbedding = poseSample.getEmbedding();
 

@@ -13,7 +13,9 @@ class SitUpExercise : ExerciseType() {
         const val SITUP_UP = "situp_up"
         const val SITUP_MID = "situp_mid"
         const val SITUP_DOWN = "situp_down"
-        const val MAX_HAND_EAR_DISTANCE = 15 // needs further experimentation
+        const val maxHandEarDistance = 17
+        const val max90degAngle = 110.0
+        const val minStraightAngle = 153.0
     }
 
     override val poseSequence = PoseSequence(
@@ -54,11 +56,11 @@ class SitUpExercise : ExerciseType() {
         val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
         val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
 
-        val isLeftBodyValid = leftBodyAngle >= MIN_90DEG_ANGLE
-        val isRightBodyValid = rightBodyAngle >= MIN_90DEG_ANGLE
+        val isLeftBodyValid = leftBodyAngle >= max90degAngle
+        val isRightBodyValid = rightBodyAngle >= max90degAngle
 
-        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
-        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isLeftHandEarDistValid = leftHandEarDistance <= maxHandEarDistance
+        val isRightHandEarDistValid = rightHandEarDistance <= maxHandEarDistance
 
         validationResults = listOf(
             ValidationResult(SITUP_UP, "leftBody", leftBodyAngle, isLeftBodyValid, leftHandEarDistance, isLeftHandEarDistValid),
@@ -87,8 +89,8 @@ class SitUpExercise : ExerciseType() {
         val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
         val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
 
-        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
-        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isLeftHandEarDistValid = leftHandEarDistance <= maxHandEarDistance
+        val isRightHandEarDistValid = rightHandEarDistance <= maxHandEarDistance
 
         validationResults = listOf(
             ValidationResult(SITUP_MID, location = "left hand-ear dist", handEarDist = leftHandEarDistance, validHandEarDist = isLeftHandEarDistValid),
@@ -127,11 +129,11 @@ class SitUpExercise : ExerciseType() {
         val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
         val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
 
-        val isLeftBodyValid = leftBodyAngle >= MIN_STRAIGHT_ANGLE
-        val isRightBodyValid = rightBodyAngle >= MIN_STRAIGHT_ANGLE
+        val isLeftBodyValid = leftBodyAngle >= minStraightAngle
+        val isRightBodyValid = rightBodyAngle >= minStraightAngle
 
-        val isLeftHandEarDistValid = leftHandEarDistance <= MAX_HAND_EAR_DISTANCE
-        val isRightHandEarDistValid = rightHandEarDistance <= MAX_HAND_EAR_DISTANCE
+        val isLeftHandEarDistValid = leftHandEarDistance <= maxHandEarDistance
+        val isRightHandEarDistValid = rightHandEarDistance <= maxHandEarDistance
 
         validationResults = listOf(
             ValidationResult(SITUP_DOWN, "leftBody", leftBodyAngle, isLeftBodyValid, leftHandEarDistance, isLeftHandEarDistValid),
@@ -184,7 +186,7 @@ class SitUpExercise : ExerciseType() {
         val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
         val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
 
-        if (leftHandEarDistance > MAX_HAND_EAR_DISTANCE || rightHandEarDistance > MAX_HAND_EAR_DISTANCE) {
+        if (leftHandEarDistance > maxHandEarDistance || rightHandEarDistance > maxHandEarDistance) {
             Log.d(TAG, "Hands not cupping ears. Left hand-ear distance: $leftHandEarDistance, Right hand-ear distance: $rightHandEarDistance")
             return false
         }

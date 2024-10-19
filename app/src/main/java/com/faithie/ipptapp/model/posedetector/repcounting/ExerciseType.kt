@@ -10,12 +10,6 @@ abstract class ExerciseType {
     abstract val poseSequence: PoseSequence
     open var numReps: Int = 0
 
-    open val MIN_STRAIGHT_ANGLE = 153.0
-    open val MAX_STRAIGHT_ANGLE = 180.0
-
-    open val MIN_90DEG_ANGLE = 60.0
-    open val MAX_90DEG_ANGLE = 110.0
-
     fun validateSequence(currentPose: Pose, currentClassification: String): Int {
         // Check if the detected pose is the first pose in the sequence
         if (poseSequence.currentIndex > 0 && poseSequence.isFirstPose(currentClassification)) {

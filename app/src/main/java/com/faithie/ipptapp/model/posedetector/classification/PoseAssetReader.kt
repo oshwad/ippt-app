@@ -21,7 +21,8 @@ import java.io.InputStream
 class PoseAssetReader(context: Context) {
     private val TAG = "PoseAssetReader"
     private val poseDetector: PoseDetector
-    private val posesCsvFile: File
+    private val pushUpCsvFile: File
+    private val sitUpCsvFile: File
     init {
         // Initialize the pose detector
         val options = PoseDetectorOptions.Builder()
@@ -29,19 +30,22 @@ class PoseAssetReader(context: Context) {
             .build()
         poseDetector = PoseDetection.getClient(options)
 
-        posesCsvFile = File(context.getExternalFilesDir(null), "poses.csv")
-        if (!posesCsvFile.exists()) {
-            Log.d(TAG, "poses.csv file does not exist")
-            posesCsvFile.createNewFile()
-            Log.d(TAG, "poses.csv file created")
+        pushUpCsvFile = File(context.getExternalFilesDir(null), "pushup_poses.csv")
+        sitUpCsvFile = File(context.getExternalFilesDir(null), "situp_poses.csv")
+        if (!pushUpCsvFile.exists()) {
+            pushUpCsvFile.createNewFile()
+        }
+        if (!sitUpCsvFile.exists()) {
+            sitUpCsvFile.createNewFile()
         }
     }
 
     fun deletePosesCsvFile() {
-        if(posesCsvFile.exists()) {
-            Log.d(TAG, "poses.csv file exists")
-            posesCsvFile.delete()
-            Log.d(TAG, "poses.csv file deleted")
+        if(pushUpCsvFile.exists()) {
+            pushUpCsvFile.delete()
+        }
+        if(sitUpCsvFile.exists()) {
+            sitUpCsvFile.delete()
         }
     }
 
@@ -49,7 +53,6 @@ class PoseAssetReader(context: Context) {
         val assetManager: AssetManager = context.assets
 
         try {
-            // List all the directories in the assets folder (e.g., "pushup_down", "pushup_up")
             val poseDirectories = assetManager.list("") // Empty string to list root assets
 
             poseDirectories?.forEach { directory ->
@@ -97,7 +100,16 @@ class PoseAssetReader(context: Context) {
     }
 
     private fun savePoseLandmarksToCsv(pose: Pose, label: String, imageName: String) {
-        if (isImageAlreadyProcessed(imageName)) {
+        val csvFile = if (label.startsWith("pushup")) {
+            pushUpCsvFile
+        } else if (label.startsWith("situp")) {
+            sitUpCsvFile
+        } else {
+            Log.e(TAG, "Unknown label $label, skipping saving.")
+            return
+        }
+
+        if (isImageAlreadyProcessed(imageName, csvFile)) {
             Log.d(TAG, "Image $imageName already processed, skipping.")
             return
         }
@@ -120,7 +132,7 @@ class PoseAssetReader(context: Context) {
             }
 
             val fullRow = "$imageName,$label$dataRow"
-            FileWriter(posesCsvFile, true).use { writer ->
+            FileWriter(csvFile, true).use { writer ->
                 writer.append(fullRow).append("\n")
             }
         } catch (e: IOException) {
@@ -146,12 +158,12 @@ class PoseAssetReader(context: Context) {
         }
     }
 
-    private fun isImageAlreadyProcessed(imageName: String): Boolean {
-        if (!posesCsvFile.exists()) return false
+    private fun isImageAlreadyProcessed(imageName: String, csvFile: File): Boolean {
+        if (!csvFile.exists()) return false
 
         return try {
             val processedImages = mutableSetOf<String>()
-            posesCsvFile.forEachLine { line ->
+            pushUpCsvFile.forEachLine { line ->
                 val columns = line.split(",")
                 if (columns.isNotEmpty()) {
                     processedImages.add(columns[0]) // The first column is the imageName
