@@ -14,7 +14,7 @@ class SitUpExercise : ExerciseType() {
         const val SITUP_MID = "situp_mid"
         const val SITUP_DOWN = "situp_down"
         const val maxHandEarDistance = 19
-        const val max90degAngle = 120.0
+        const val max90degAngle = 122.0
         const val minStraightAngle = 153.0
     }
 

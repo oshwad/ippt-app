@@ -33,8 +33,14 @@ fun CameraPreview (
     val lifecycleOwner = LocalLifecycleOwner.current
     val previewView: PreviewView = remember { PreviewView(context) }
 
-    controller.bindToLifecycle(lifecycleOwner)
-    previewView.controller = controller
+//    controller.unbind()
+
+    try {
+        controller.bindToLifecycle(lifecycleOwner)
+        previewView.controller = controller
+    } catch (e: Exception) {
+        Log.e(TAG, "Use case binding failed $e")
+    }
 
     // States to hold the width, height, and flipped status
     var previewWidth by remember { mutableStateOf(0) }
