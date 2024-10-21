@@ -13,14 +13,27 @@ class SitUpExercise : ExerciseType() {
         const val SITUP_UP = "situp_up"
         const val SITUP_MID = "situp_mid"
         const val SITUP_DOWN = "situp_down"
-        const val maxHandEarDistance = 17
-        const val max90degAngle = 110.0
+        const val maxHandEarDistance = 19
+        const val max90degAngle = 120.0
         const val minStraightAngle = 153.0
     }
 
     override val poseSequence = PoseSequence(
         listOf(SITUP_UP, SITUP_MID, SITUP_DOWN)
     )
+
+//    override fun validateSequence(currentPose: Pose, currentClassification: String): Int {
+//        Log.d(tag, "SitUpExercise current index: ${poseSequence.currentIndex}, currentClassification: $currentClassification")
+//
+//        // Check hand-ear distance before proceeding with sequence validation
+//        if (validateHandsCuppingEars(currentPose)) {
+//            Log.d(tag, "Hand-ear distance exceeded. Not advancing the sequence.")
+//            return numReps // Don't advance the sequence if hand-ear distance exceeds the threshold
+//        }
+//
+//        // Proceed with normal sequence validation if hand-ear distance is within the threshold
+//        return super.validateSequence(currentPose, currentClassification)
+//    }
 
     override fun validateCurrentStage(pose: Pose, currentPose: String): Boolean {
         return when (currentPose) {
@@ -56,8 +69,8 @@ class SitUpExercise : ExerciseType() {
         val leftHandEarDistance = calculateDistance(leftWrist, leftEar)
         val rightHandEarDistance = calculateDistance(rightWrist, rightEar)
 
-        val isLeftBodyValid = leftBodyAngle >= max90degAngle
-        val isRightBodyValid = rightBodyAngle >= max90degAngle
+        val isLeftBodyValid = leftBodyAngle <= max90degAngle
+        val isRightBodyValid = rightBodyAngle <= max90degAngle
 
         val isLeftHandEarDistValid = leftHandEarDistance <= maxHandEarDistance
         val isRightHandEarDistValid = rightHandEarDistance <= maxHandEarDistance
@@ -67,11 +80,11 @@ class SitUpExercise : ExerciseType() {
             ValidationResult(SITUP_UP, "rightBody", rightBodyAngle, isRightBodyValid, rightHandEarDistance, isRightHandEarDistValid)
         )
 
-        if (isLeftBodyValid && isRightBodyValid && isLeftHandEarDistValid && isRightHandEarDistValid) {
-            Log.d(TAG, "situp_down SUCCESS leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+        if (isLeftBodyValid && isRightBodyValid && (isLeftHandEarDistValid || isRightHandEarDistValid)) {
+            Log.d(TAG, "situp_up SUCCESS leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle left hand ear: $leftHandEarDistance right hand ear: $rightHandEarDistance")
             return true
         } else {
-            Log.d(TAG, "situp_down failed leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
+            Log.d(TAG, "situp_up failed leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle left hand ear: $leftHandEarDistance right hand ear: $rightHandEarDistance")
             return false
         }
     }
@@ -97,9 +110,11 @@ class SitUpExercise : ExerciseType() {
             ValidationResult(SITUP_MID, location = "right hand-ear dist", handEarDist = rightHandEarDistance, validHandEarDist = isRightHandEarDistValid)
         )
 
-        if (isLeftHandEarDistValid && isRightHandEarDistValid) {
+        if (isLeftHandEarDistValid || isRightHandEarDistValid) {
+            Log.d(TAG, "situp_mid SUCCESS left hand ear: $leftHandEarDistance right hand ear: $rightHandEarDistance")
             return true
         } else {
+            Log.d(TAG, "situp_mid failed left hand ear: $leftHandEarDistance right hand ear: $rightHandEarDistance")
             return false
         }
     }
@@ -140,7 +155,7 @@ class SitUpExercise : ExerciseType() {
             ValidationResult(SITUP_DOWN, "rightBody", rightBodyAngle, isRightBodyValid, rightHandEarDistance, isRightHandEarDistValid)
         )
 
-        if (isLeftBodyValid && isRightBodyValid && isLeftHandEarDistValid && isRightHandEarDistValid) {
+        if (isLeftBodyValid && isRightBodyValid && (isLeftHandEarDistValid || isRightHandEarDistValid)) {
             Log.d(TAG, "situp_down SUCCESS leftBodyAngle: $leftBodyAngle, rightBodyAngle: $rightBodyAngle")
             return true
         } else {

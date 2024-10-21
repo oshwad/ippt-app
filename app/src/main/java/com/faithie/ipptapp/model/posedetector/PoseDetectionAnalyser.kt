@@ -93,10 +93,10 @@ class PoseDetectionAnalyser(
                     curClassification = classificationLabel
                 }
                 if (currentExercise.value is PushUpExercise) {
-                    numReps = poseClassifierProcessor.pushUpExercise.validateSequence(pose, classificationLabel)
+                    numReps = poseClassifierProcessor.pushUpExercise.onNewFrame(pose, classificationLabel)
                     validationResults = poseClassifierProcessor.pushUpExercise.validationResults
                 } else {
-                    numReps = poseClassifierProcessor.sitUpExercise.validateSequence(pose, classificationLabel)
+                    numReps = poseClassifierProcessor.sitUpExercise.onNewFrame(pose, classificationLabel)
                     validationResults = poseClassifierProcessor.sitUpExercise.validationResults
                 }
 

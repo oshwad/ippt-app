@@ -22,6 +22,7 @@ data class PoseSequence(val poses: List<String>) {
     }
 
     fun isFirstPose(classification: String): Boolean {
-        return currentIndex == 0 && poses[currentIndex] == classification
+        return poses[0] == classification
+//        return currentIndex == 0 && poses[currentIndex] == classification
     }
 }

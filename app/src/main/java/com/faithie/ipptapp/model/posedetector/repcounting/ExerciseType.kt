@@ -2,23 +2,43 @@ package com.faithie.ipptapp.model.posedetector.repcounting
 
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.util.Log
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 
 abstract class ExerciseType {
+    val tag = "ExerciseType"
     abstract val name: String
     abstract val poseSequence: PoseSequence
     open var numReps: Int = 0
 
-    fun validateSequence(currentPose: Pose, currentClassification: String): Int {
-        // Check if the detected pose is the first pose in the sequence
+    private var frameCount = 0 // Initialize a frame counter
+
+    fun onNewFrame(currentPose: Pose, currentClassification: String): Int {
+        frameCount++ // Increment the frame counter on each new frame
+
+        // Call the validation sequence, passing the frame count
+        return validateSequence(currentPose, currentClassification)
+    }
+
+    private var lastAdvanceFrameCount = -1 // Track the last frame where the sequence advanced
+    private val cooldownFrames = 5 // Number of frames to wait before checking for a reset again
+    open fun validateSequence(currentPose: Pose, currentClassification: String): Int {
+        Log.d(tag, "current index: ${poseSequence.currentIndex}, currentClassification: $currentClassification")
+
+        // Check if it's been long enough since the last advancement before allowing resets
         if (poseSequence.currentIndex > 0 && poseSequence.isFirstPose(currentClassification)) {
-            poseSequence.currentIndex = 0 // Reset sequence to the first pose
+            if (frameCount - lastAdvanceFrameCount > cooldownFrames) {
+                Log.d(tag, "resetting to first pose in sequence")
+                poseSequence.currentIndex = 0 // Reset sequence to the first pose
+            }
         }
 
+        // Continue with normal sequence validation
         if (poseSequence.isNextPoseValid(currentClassification)) {
             if (validateCurrentStage(currentPose, currentClassification)) { // Check if the current stage is valid
                 poseSequence.advance() // Advance the sequence if valid
+                lastAdvanceFrameCount = frameCount // Update the last advancement frame count
 
                 if (poseSequence.isCompleted()) {
                     numReps++
@@ -27,7 +47,14 @@ abstract class ExerciseType {
                 }
                 return numReps
             }
+//            else {
+//                // Reset sequence if ANY of the validation stages fail
+//                if (frameCount - lastAdvanceFrameCount > cooldownFrames) {
+//                    poseSequence.currentIndex = 0 // Reset sequence to the first pose
+//                }
+//            }
         }
+
         return numReps
     }
 

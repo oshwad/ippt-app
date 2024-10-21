@@ -73,7 +73,7 @@ class DevExerciseViewModel(application: Application): AndroidViewModel(applicati
             executor.value,
             analyser.value
         )
-        cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     })
 
     fun startWorkout() {

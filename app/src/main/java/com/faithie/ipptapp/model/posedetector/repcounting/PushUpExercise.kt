@@ -12,10 +12,10 @@ class PushUpExercise : ExerciseType() {
         const val PUSHUP_DOWN = "pushup_down"
         const val PUSHUP_MID = "pushup_mid"
         const val PUSHUP_UP = "pushup_up"
-        const val minStraightBodyAngle = 170.0
+        const val minStraightBodyAngle = 163.0
         const val maxStraightAngle = 180.0
         const val max90degAngle = 90.0
-        const val minStraightAngle = 160.0
+        const val minStraightAngle = 156.0
     }
 
     override val poseSequence = PoseSequence(
